@@ -1,8 +1,8 @@
 
 from smath import smath
-from widgets import QFileIconWidget
+#from widgets import QFileIconWidget
 from datastructures.TrackableTypes import TrackableTypes, FileType
-from style import style
+#from style import style
 from datastructures.Mask import Mask
 
 

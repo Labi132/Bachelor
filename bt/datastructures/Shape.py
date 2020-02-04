@@ -1,8 +1,8 @@
 
 from interaction.Effect import *
-from PyQt5 import QtCore, QtWidgets, QtGui
-from style import style
-from widgets import QCustomListViewWidget
+#from PyQt5 import QtCore, QtWidgets, QtGui
+#from style import style
+#from widgets import QCustomListViewWidget
 import math
 
 
