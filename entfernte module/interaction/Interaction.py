@@ -2,7 +2,7 @@
 from datastructures.Shape import Shape
 from datastructures.TrackableTypes import TrackableTypes
 from interaction import Effect
-from smath import smath
+#from smath import smath
 
 
 class Interaction:

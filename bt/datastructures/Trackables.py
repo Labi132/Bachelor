@@ -1,9 +1,9 @@
 
-from smath import smath
+#from smath import smath
 #from widgets import QFileIconWidget
 from datastructures.TrackableTypes import TrackableTypes, FileType
 #from style import style
-from datastructures.Mask import Mask
+#from datastructures.Mask import Mask
 
 
 from PyQt5 import QtCore, QtWidgets, QtGui
@@ -153,7 +153,7 @@ class Tangible(Trackable):
         circle_roi = smath.Math.compute_circle(self.center[0], self.center[1], int(math.fabs(self.aabb[3][0] - self.aabb[0][0]) / 2 + 50))
 
         self.set_roi(smath.Math.resample_points(circle_roi, 24))
-        self.mask = Mask(self.roi, self.id)
+       # self.mask = Mask(self.roi, self.id)
         self.effect = None
         self.shape_index = None
 
@@ -183,9 +183,10 @@ class Tangible(Trackable):
     def set_shape_index(self, shape_index):
         self.shape_index = shape_index
 
+"""
     def set_mask(self):
         self.mask = Mask(self.roi, self.id)
-
+"""
 
 class Hand(Trackable):
     def __init__(self, _id, hand_center, finger_tips, session_id, type_id, user_id, name, center, roi, width, height, angle):

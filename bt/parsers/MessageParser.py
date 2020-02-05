@@ -1,9 +1,9 @@
 from datastructures.TuioDatastructures import *
 from parsers.MessageTypes import MessageTypes
 from datastructures.Trackables import *
-from smath import smath
-from interaction import Interaction
-from util.Utility import InfiniteThread
+#from smath import smath
+#from interaction import Interaction
+#from util.Utility import InfiniteThread
 import time
 
 
@@ -11,7 +11,7 @@ class MessageParser:
     def __init__(self, event):
         self.bundle = []
         self.alive_objects = {}
-        self.interaction_manager = Interaction.Interaction()
+        #self.interaction_manager = Interaction.Interaction()
 
         self.message_time = int(round(time.time() * 1000))
         self.current_time = int(round(time.time() * 1000))
@@ -57,8 +57,6 @@ class MessageParser:
                 self.alive_objects[i] = TUIOObject.create_tuio_object(i,
                                                                       sub_bundle,
                                                                       frame)
-                print("BUNDLE:")
-                #print(self.alive_objects[i].get_bounds_component())
                 self.event_source.tangible_move(self.alive_objects[i])
 
             sub_bundle = []
@@ -73,9 +71,6 @@ class MessageParser:
                 dead.append(key)
 
         for d in dead:
-            print("DEATH:")
-            print(d)
-            # TODO: INSERT CALLBACK FOR PYGAME FIRE REMOVAL EVENT
             self.event_source.tangible_death(self.alive_objects[d])
             self.alive_objects.pop(d)
 
