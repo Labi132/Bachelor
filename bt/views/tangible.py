@@ -19,7 +19,7 @@ class Tangible(pygame.sprite.Sprite):
             self.image = pygame.Surface((90, 90))
             self.image.fill(white)
             self.rect = self.image.get_rect()
-            self.rect.center = (500, 500)
+            self.rect.center = (-500, -500)
             self.lockable = False
 
     def set_center(self, coords):
