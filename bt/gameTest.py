@@ -12,6 +12,8 @@ from EventFire import EventFire
 import pygame
 import sys
 import time
+import logging
+import random
 from views.images import Images, ImageList
 from views.tangible import Tangible
 
@@ -23,34 +25,29 @@ DRAG = 1
 GROUP = 2
 PAN = 3
 
-images = {('views/Bilder/city/c1.jpg', (200, 100)),
-          ('views/Bilder/city/c2.jpg', (550, 100)),
-          ('views/Bilder/city/c3.jpg', (900, 100)),
-          ('views/Bilder/food/f1.jpg', (1250, 100)),
-          ('views/Bilder/food/f2.jpg', (1600, 100)),
-          ('views/Bilder/food/f3.jpg', (200, 300)),
-          ('views/Bilder/food/f4.jpg', (550, 300)),
-          ('views/Bilder/food/f5.jpg', (900, 300)),
-          ('views/Bilder/food/f6.jpg', (1250, 300)),
-          ('views/Bilder/food/f7.jpg', (1600, 300)),
-          ('views/Bilder/pet/p1.jpg', (200, 500)),
-          ('views/Bilder/pet/p2.jpg', (550, 500)),
-          ('views/Bilder/pet/p3.jpg', (900, 500)),
-          ('views/Bilder/pet/p4.jpg', (1250, 500)),
-          ('views/Bilder/pet/p5.jpg', (1600, 500)),
-          ('views/Bilder/pet/p6.jpg', (200, 700)),
-          ('views/Bilder/pet/p7.jpg', (550, 700)),
-          ('views/Bilder/vacation/v1.jpg', (900, 700)),
-          ('views/Bilder/vacation/v2.jpg', (1250, 700)),
-          ('views/Bilder/vacation/v3.jpg', (1600, 700)),
-          ('views/Bilder/vacation/v4.jpg', (200, 900)),
-          ('views/Bilder/vacation/v5.jpg', (550, 900)),
-          ('views/Bilder/vacation/v6.jpg', (900, 900)),
-          ('views/Bilder/vacation/v7.jpg', (1250, 900)),
-          ('views/Bilder/screenshot/s1.PNG', (1600, 900))}
+images = {'views/Bilder/city/c1.jpg', 'views/Bilder/city/c2.jpg',
+          'views/Bilder/city/c3.jpg', 'views/Bilder/food/f1.jpg',
+          'views/Bilder/food/f2.jpg', 'views/Bilder/food/f3.jpg',
+          'views/Bilder/food/f4.jpg', 'views/Bilder/food/f5.jpg',
+          'views/Bilder/food/f6.jpg', 'views/Bilder/food/f7.jpg',
+          'views/Bilder/pet/p1.jpg', 'views/Bilder/pet/p2.jpg',
+          'views/Bilder/pet/p3.jpg', 'views/Bilder/pet/p4.jpg',
+          'views/Bilder/pet/p5.jpg', 'views/Bilder/pet/p6.jpg',
+          'views/Bilder/pet/p7.jpg', 'views/Bilder/vacation/v1.jpg',
+          'views/Bilder/vacation/v2.jpg', 'views/Bilder/vacation/v3.jpg',
+          'views/Bilder/vacation/v4.jpg', 'views/Bilder/vacation/v5.jpg',
+          'views/Bilder/vacation/v6.jpg', 'views/Bilder/vacation/v7.jpg',
+          'views/Bilder/screenshot/s1.PNG', 'views/Bilder/screenshot/s2.PNG',
+          'views/Bilder/screenshot/s3.PNG'}
 
-tangibles = {HIGHLIGHT: [100, 0, 100], DRAG: [0, 255, 0], GROUP: [255, 0, 0],
-             PAN: [255, 255, 0]}
+positions = {
+    (200, 100), (200, 400), (200, 700), (200, 1000), (200, 1300), (200, 1600),
+    (650, 100), (650, 400), (650, 700), (650, 1000), (650, 1300), (650, 1600),
+    (1100, 100), (1100, 400), (1100, 700), (1100, 1000), (1100, 1300),
+    (1550, 100), (1550, 400), (1550, 700), (1550, 1000), (1550, 1300),
+    (2000, 100), (2000, 400), (2000, 700), (2000, 1000), (2000, 1300)}
+
+tangibles = {HIGHLIGHT: 0, DRAG: 1, GROUP: 2, PAN: 3}
 tang = {}
 
 
@@ -62,26 +59,29 @@ def create_tangibles(tangl):
 
 
 def create_images(imgl):
+    # muss der screenshot volle größe / größer als 300, 150 sein / screenshot hochformat?
+    position_list = list(positions)
+    random.shuffle(position_list)
+    k = 0
+
     for x in images:
-        new_image = Images(x[0])
-        new_image.set_center(x[1][0], x[1][1])
+        new_image = Images(x)
+        new_image.set_center(position_list[k][0], position_list[k][1])
+        k = k + 1
         imgl.add(new_image)
 
 
+"""
 def move_all_images(imgl, amount):
     for x in imgl:
         x.move(amount[0], amount[1])
-
-    # , , , , , ,
-
-
-# 'img10.jpg', 'img11.jpg', 'img12.jpg'}
-
-# TODO: Loggen von aktuellen tangible positionen auf der Oberfläche
+"""
 
 
 # define a main function
 def main():
+    logging.basicConfig(filename='log.txt', format='%(asctime)s %(message)s',
+                        level=logging.INFO)
     highlight_coll = []
     old_offset = [0, 0]
     current_offset = [0, 0]
@@ -134,10 +134,12 @@ def main():
     image_list = ImageList()
     create_images(image_list)
 
+    """
     control_rect = Tangible([], 4)
     tang[4] = control_rect  # TODO: ENTFERNEN; NUR ZUM TESTEN
     tangible_list.add(control_rect)
     control_rect.set_center(pygame.mouse.get_pos())
+    """
 
     lockList = []
 
@@ -146,11 +148,12 @@ def main():
     timer_highlight = time.perf_counter()
     timer_pan = time.perf_counter()
     timer_group = time.perf_counter()
-    drag_death = False
-    highlight_death = False
-    pan_death = False
-    group_death = False
+    deaths = {DRAG: False, HIGHLIGHT: False, PAN: False, GROUP: False}
     timer_delay = 0.5
+
+    """Timer fürs Logging"""
+    timer_log = time.perf_counter()
+    logging_delay = 1
 
     collisions = [None, None, None, None, None]
     # define a variable to control the main loop
@@ -172,7 +175,7 @@ def main():
 
             if event.type == TANGIBLEMOVE:
                 if event.who.get_class_id() == DRAG:
-                    drag_death = False
+                    deaths[DRAG] = False
                     move_pos = tang[DRAG].get_center()
                     tang[DRAG].set_center(
                         event.who.get_bounds_component().get_position())
@@ -202,7 +205,7 @@ def main():
                     """
 
                 if event.who.get_class_id() == HIGHLIGHT:  # HIGHLIGHTING GEHT
-                    highlight_death = False
+                    deaths[HIGHLIGHT] = False
                     tang[HIGHLIGHT].set_center(
                         event.who.get_bounds_component().get_position())
                     if highlight_coll:
@@ -217,7 +220,7 @@ def main():
                             highlight_coll.append(x)
 
                 if event.who.get_class_id() == GROUP:  # Funktioniert, allerdings noch ohne offset und nicht animiert
-                    group_death = False
+                    deaths[GROUP] = False
                     tang[GROUP].set_center(
                         event.who.get_bounds_component().get_position())
                     group_center = tang[GROUP].get_center()
@@ -230,6 +233,7 @@ def main():
                             x.rect.move_ip(group_delta)
                             k += 40  # offset vielleicht differenzieren
                 """
+                # Zoom
                 if event.who.get_class_id() == PAN:
                     pan_death = False
                     tang[PAN].set_center(event.who.get_bounds_component().get_position())
@@ -250,8 +254,9 @@ def main():
                                 zoomed_img.zoom(pan_center, align_right)
                 """
 
+                # PAN
                 if event.who.get_class_id() == PAN:
-                    pan_death = False
+                    deaths[PAN] = False
                     tang[PAN].set_center(
                         event.who.get_bounds_component().get_position())
                     pan_center = tang[PAN].get_center()
@@ -290,29 +295,30 @@ def main():
 
             if event.type == TANGIBLEDEATH:
                 if event.who.get_class_id() == DRAG:
-                    drag_death = True
+                    deaths[DRAG] = True
                     timer_drag = time.perf_counter()
 
                 if event.who.get_class_id() == HIGHLIGHT:
-                    highlight_death = True
+                    deaths[HIGHLIGHT] = True
                     timer_highlight = time.perf_counter()
 
                 if event.who.get_class_id() == PAN:
-                    pan_death = True
+                    deaths[PAN] = True
                     timer_pan = time.perf_counter()
 
                 if event.who.get_class_id() == GROUP:
-                    group_death = True
+                    deaths[GROUP] = True
                     timer_group = time.perf_counter()
 
         # Handle all death flags
-        if drag_death and time.perf_counter() - timer_drag > timer_delay:
+        if deaths[DRAG] and time.perf_counter() - timer_drag > timer_delay:
             delta = (0, 0)
             tang[DRAG].set_lockable(False)
             for x in lockList:
                 x.unlock()
                 lockList.remove(x)
-        if highlight_death and time.perf_counter() - timer_highlight > timer_delay:
+        if deaths[
+            HIGHLIGHT] and time.perf_counter() - timer_highlight > timer_delay:
             collisions[HIGHLIGHT] = []
         # if group_death and time.perf_counter() - timer_group > 0.5: # nötig?
 
@@ -337,11 +343,19 @@ def main():
         # for x in image_list:
         #    x.draw_highlight(screen)
         pygame.display.flip()
-        for y in tangible_list:
-            print(y.get_id())
-            print(y.get_center())
-            # TODO: Logging; ID, location, (mode), death
-            # TODO Tangible Logging: Beschleunigung, modus, ID
+        if time.perf_counter() - timer_log > logging_delay:
+            for y in tangible_list:
+                message = "ID: " + str(y.get_id()) + ", "
+                message += "Alive: " + str(deaths[y.get_id()]) + ", "
+                message += "Center: " + str(y.get_center())
+
+                # message += y.get_center
+                print(y.get_id())
+                print(y.get_center())
+                # TODO: Logging; ID, location, (mode), death
+                # TODO Tangible Logging: Beschleunigung, modus, ID
+                logging.info(message)
+            timer_log = time.perf_counter()
         clock.tick(30)
 
 

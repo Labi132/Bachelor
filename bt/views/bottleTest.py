@@ -1,7 +1,8 @@
 from bottle import route, run, get, post, request
 import logging
 
-logging.basicConfig(filename='log.txt',format='%(asctime)s %(message)s', level=logging.INFO)
+logging.basicConfig(filename='log.txt',format='%(asctime)s %(message)s',
+                    level=logging.INFO)
 
 
 @get('/log/<content>') # or @route('/login')
