@@ -9,18 +9,21 @@ class Tangible(pygame.sprite.Sprite):
     def __init__(self, bounds, id):
         pygame.sprite.Sprite.__init__(self)
         self.id = id
+
         if bounds != []:
             self.image = pygame.Surface((bounds.width, bounds.height))
             self.image.fill(white)
             self.rect = self.image.get_rect()
             self.rect.center = (bounds.get_position())
             self.lockable = False
+            self.alive = True
         else:
             self.image = pygame.Surface((90, 90))
             self.image.fill(white)
             self.rect = self.image.get_rect()
             self.rect.center = (-500, -500)
             self.lockable = False
+            self.alive = False
 
     def set_center(self, coords):
         self.rect.center = (coords[0], coords[1])
@@ -42,3 +45,9 @@ class Tangible(pygame.sprite.Sprite):
 
     def set_color(self, color):
         self.image.fill(color)
+
+    def set_alive(self, living):
+        self.alive = living
+
+    def get_alive(self):
+        return self.alive
