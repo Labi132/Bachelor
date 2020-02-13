@@ -28,20 +28,33 @@ GROUP = 2
 PAN = 3
 ZOOM = 4
 
-images = {'views/Bilder/city/c1.jpg', 'views/Bilder/city/c2.jpg',
-          'views/Bilder/city/c3.jpg', 'views/Bilder/food/f1.jpg',
-          'views/Bilder/food/f2.jpg', 'views/Bilder/food/f3.jpg',
-          'views/Bilder/food/f4.jpg', 'views/Bilder/food/f5.jpg',
-          'views/Bilder/food/f6.jpg', 'views/Bilder/food/f7.jpg',
-          'views/Bilder/pet/p1.jpg', 'views/Bilder/pet/p2.jpg',
-          'views/Bilder/pet/p3.jpg', 'views/Bilder/pet/p4.jpg',
-          'views/Bilder/pet/p5.jpg', 'views/Bilder/pet/p6.jpg',
-          'views/Bilder/pet/p7.jpg', 'views/Bilder/vacation/v1.jpg',
-          'views/Bilder/vacation/v2.jpg', 'views/Bilder/vacation/v3.jpg',
-          'views/Bilder/vacation/v4.jpg', 'views/Bilder/vacation/v5.jpg',
-          'views/Bilder/vacation/v6.jpg', 'views/Bilder/vacation/v7.jpg',
-          'views/Bilder/screenshot/s1.PNG', 'views/Bilder/screenshot/s2.PNG',
-          'views/Bilder/screenshot/s3.PNG'}
+images = {('views/Bilder/city/c1.jpg', 'city'),
+          ('views/Bilder/city/c2.jpg', 'city'),
+          ('views/Bilder/city/c3.jpg', 'city'),
+          ('views/Bilder/food/f1.jpg', 'food'),
+          ('views/Bilder/food/f2.jpg', 'food'),
+          ('views/Bilder/food/f3.jpg', 'food'),
+          ('views/Bilder/food/f4.jpg', 'food'),
+          ('views/Bilder/food/f5.jpg', 'food'),
+          ('views/Bilder/food/f6.jpg', 'food'),
+          ('views/Bilder/food/f7.jpg', 'food'),
+          ('views/Bilder/pet/p1.jpg', 'pet'),
+          ('views/Bilder/pet/p2.jpg', 'pet'),
+          ('views/Bilder/pet/p3.jpg', 'pet'),
+          ('views/Bilder/pet/p4.jpg', 'pet'),
+          ('views/Bilder/pet/p5.jpg', 'pet'),
+          ('views/Bilder/pet/p6.jpg', 'pet'),
+          ('views/Bilder/pet/p7.jpg', 'pet'),
+          ('views/Bilder/vacation/v1.jpg', 'vacation'),
+          ('views/Bilder/vacation/v2.jpg', 'vacation'),
+          ('views/Bilder/vacation/v3.jpg', 'vacation'),
+          ('views/Bilder/vacation/v4.jpg', 'vacation'),
+          ('views/Bilder/vacation/v5.jpg', 'vacation'),
+          ('views/Bilder/vacation/v6.jpg', 'vacation'),
+          ('views/Bilder/vacation/v7.jpg', 'vacation'),
+          ('views/Bilder/screenshot/s1.PNG', 'screen'),
+          ('views/Bilder/screenshot/s2.PNG', 'screen'),
+          ('views/Bilder/screenshot/s3.PNG', 'screen')}
 
 positions = {
     (200, 100), (200, 350), (200, 600), (200, 850),
@@ -51,13 +64,6 @@ positions = {
     (1200, 100), (1200, 350), (1200, 600), (1200, 850),
     (1450, 100), (1450, 350), (1450, 600), (1450, 850),
     (1700, 100), (1700, 350), (1700, 600)}
-
-"""positions = {
-    (200, 100), (200, 350), (200, 600), (200, 850), (200, 1100), (200, 1350),
-    (450, 100), (450, 350), (450, 600), (450, 850), (450, 1100), (450, 1350),
-    (700, 100), (700, 350), (700, 600), (700, 850), (700, 1100),
-    (950, 100), (950, 350), (950, 600), (950, 850), (950, 1100),
-    (1200, 100), (1200, 350), (1200, 600), (1200, 850), (1200, 1100)}"""
 
 tangibles = {HIGHLIGHT: 0, DRAG: 1, GROUP: 2, PAN: 3, ZOOM: 4}
 tang = {}
@@ -115,7 +121,10 @@ def main():
     # Zoom
     zoomed_img = None
 
+    # Event Source for Servers
     event_source = EventFire()
+
+    # Bottle Server
     bottle = Bottle(event_source)
     threading.Thread(target=bottle.run).start()
 
@@ -155,8 +164,12 @@ def main():
     TANGIBLESWITCH = pygame.USEREVENT + 3
 
     clock = pygame.time.Clock()
-    # create a surface on screen that has the size of 240 x 180
+
+
+    # create a surface on screen
     screen = pygame.display.set_mode((0, 0), pygame.NOFRAME)
+    print(screen.get_width())
+    print(screen.get_height())
 
     tangible_list = pygame.sprite.LayeredUpdates()
     create_tangibles(tangible_list)
@@ -278,7 +291,7 @@ def main():
                         tang[ZOOM].set_center(
                             event.who.get_bounds_component().get_position())
                         zoom_center = tang[ZOOM].get_center()
-                    if zoom_center[0] < 900:
+                    if zoom_center[0] < 960:
                         align_right = True
                     else:
                         align_right = False
@@ -302,7 +315,6 @@ def main():
                         event.who.get_bounds_component().get_position())
                     log(tang[PAN])
                     if deaths[PAN]:
-                        print("IF LOOP PAN")
                         deaths[PAN] = False
                         tang[PAN].set_alive(deaths[PAN])
                         tang[PAN].set_center(
@@ -325,16 +337,7 @@ def main():
                         current_offset[1] = current_offset[1] - offset_rate
                         offset_changed = True
 
-                    """
-                    Ablauf kreis:
-                    kreis als aktiv flaggen
-                    pan_center als center
-                    radius X
-                    bei weiterer bewegung kreis nicht verschieben aber rest verschieben
-                    bei tangible death kreis entfernen                    
-                    """
-
-                    """
+                """
                     if pan_center[0] < 200 and pan_center[
                         1] < 200:  # LEFT AND UP
                         current_offset[0] = current_offset[0] + offset_rate
@@ -401,7 +404,6 @@ def main():
                     log(tang[GROUP])
                     timer_group = time.perf_counter()
 
-
         # Handle all death flags
         if deaths[DRAG] and time.perf_counter() - timer_drag > timer_delay:
             tang[DRAG].set_lockable(False)
@@ -435,7 +437,7 @@ def main():
         tangible_list.draw(screen)
         image_list.draw(screen)
         if zoomed_img is not None:
-            zoomed_img.draw_unscaled(screen, zoom_center)
+            zoomed_img.draw_unscaled(screen, align_right)
         if not deaths[PAN]:
             pan_circle.draw(screen)
         pygame.display.flip()
