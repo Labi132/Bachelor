@@ -18,7 +18,8 @@ from EventFire import EventFire
 from bottleTest import Bottle
 
 from views.images import Images, ImageList
-from views.tangible import Tangible
+from views.tangible import Tangible, Circle
+
 
 white = [255, 255, 255]
 
@@ -101,15 +102,22 @@ def log(tangible):
 
 # define a main function
 def main():
+    # Highlight
     highlight_coll = []
+
+    # Pan
     old_offset = [0, 0]
     current_offset = [0, 0]
     offset_rate = 3
     offset_changed = False
+    pan_circle = Circle()
+    pan_tolerance = 50
+
+    # Zoom
     zoomed_img = None
+
     event_source = EventFire()
     bottle = Bottle(event_source)
-    # bottle.run()
     threading.Thread(target=bottle.run).start()
     # threading.Thread(target=bottle.run()).start()
     # Aus Jürgens Code
@@ -260,19 +268,20 @@ def main():
 
                 # Zoom
                 if event.who.get_class_id() == ZOOM:
-                    zoom_death = False
-                    tang[ZOOM].set_alive(deaths[ZOOM])
-                    log(tang[ZOOM])
-                    tang[ZOOM].set_center(
-                        event.who.get_bounds_component().get_position())
-                    zoom_center = tang[ZOOM].get_center()
+                    if deaths[ZOOM]:
+                        deaths[ZOOM] = False
+                        tang[ZOOM].set_alive(deaths[ZOOM])
+                        log(tang[ZOOM])
+                        tang[ZOOM].set_center(
+                         event.who.get_bounds_component().get_position())
+                        zoom_center = tang[ZOOM].get_center()
                     if zoom_center[0] < 900:
                         align_right = True
                     else:
                         align_right = False
                     if collisions[ZOOM]:
                         if len(collisions[ZOOM]) > 1:
-                            # TODO: make sure only biggest overlap is used
+                            zoomed_img = collisions[ZOOM][0]
                             pass
                         else:
                             zoomed_img = collisions[ZOOM][0]
@@ -284,14 +293,49 @@ def main():
                     else:
                         zoomed_img = None
 
-                # PAN
+                # PAN mit Kreis
                 if event.who.get_class_id() == PAN:
-                    deaths[PAN] = False
-                    tang[PAN].set_alive(deaths[PAN])
-                    log(tang[PAN])
                     tang[PAN].set_center(
                         event.who.get_bounds_component().get_position())
-                    pan_center = tang[PAN].get_center()
+                    if deaths[PAN]:
+                        print("IF LOOP PAN")
+                        deaths[PAN] = False
+                        tang[PAN].set_alive(deaths[PAN])
+                        log(tang[PAN])
+                        tang[PAN].set_center(
+                            event.who.get_bounds_component().get_position())
+                        pan_center = tang[PAN].get_center()
+                        pan_circle.set_center(pan_center)
+                    tang_pan_center = tang[PAN].get_center()
+                    pan_delta = (tang_pan_center[0] - pan_center[0],
+                                 tang_pan_center[1] - pan_center[1])
+                    if pan_delta[0] > pan_tolerance:  # rechts
+                        current_offset[0] = current_offset[0] - offset_rate
+                        offset_changed = True
+                    if pan_delta[0] < -1*pan_tolerance:  # links
+                        current_offset[0] = current_offset[0] + offset_rate
+                        offset_changed = True
+                    if pan_delta[1] > pan_tolerance:  # hoch
+                        current_offset[1] = current_offset[1] + offset_rate
+                        offset_changed = True
+                    if pan_delta[1] < -1*pan_tolerance:  # runter
+                        current_offset[1] = current_offset[1] - offset_rate
+                        offset_changed = True
+
+
+
+
+
+                    """
+                    Ablauf kreis:
+                    kreis als aktiv flaggen
+                    pan_center als center
+                    radius X
+                    bei weiterer bewegung kreis nicht verschieben aber rest verschieben
+                    bei tangible death kreis entfernen                    
+                    """
+
+                    """
                     if pan_center[0] < 200 and pan_center[
                         1] < 200:  # LEFT AND UP
                         current_offset[0] = current_offset[0] + offset_rate
@@ -324,6 +368,7 @@ def main():
                     if pan_center[1] > 950:  # DOWN
                         current_offset[1] = current_offset[1] - offset_rate
                         offset_changed = True
+                    """
 
             if event.type == TANGIBLEDEATH:
                 if event.who.get_class_id() == DRAG:
@@ -392,6 +437,8 @@ def main():
         image_list.draw(screen)
         if zoomed_img is not None:
             zoomed_img.draw_unscaled(screen, zoom_center)
+        if not deaths[PAN]:
+            pan_circle.draw(screen)
         pygame.display.flip()
         clock.tick(30)
 
