@@ -7,6 +7,7 @@
  */
 
 #include <WiFi.h>
+#include <M5Stack.h>
 
 const char* ssid     = "KDG-13ED3";
 const char* password = "tYhm3XCQPwQV";
@@ -17,6 +18,7 @@ void setup()
 {
     Serial.begin(115200);
     delay(10);
+    M5.begin()
 
     // We start by connecting to a WiFi network
 
@@ -36,14 +38,48 @@ void setup()
     Serial.println("WiFi connected");
     Serial.println("IP address: ");
     Serial.println(WiFi.localIP());
+    
+    M5.Lcd.setBrightness(200);
 }
 
-int value = 0;
+String mode[5] = {"highlight", "drag", "group", "pan", "zoom"};
+int current_mode = 0;
+bool a_pressed;
+bool c_pressed;
+
+void set_diplay(){
+     M5.Lcd.drawJpgFile(SD, "/p" + (String) current_mode + ".jpg");
+}
 
 void loop()
 {
-    delay(5000);
-    ++value;
+    a_pressed = M5.BtnA.read();
+    c_pressed = M5.BtnC.read();
+    unsigned long button_timeout = millis();
+    if (millis()-button_timeout > 1000){
+        if (a_pressed == true){
+            if(current_mode == 0){
+                current_mode == 4;
+                //change image to X
+            }
+            else{
+                current_mode-=1;
+                //change image to X
+            }
+        }
+        if (c_pressed == true){
+            if(current_mode == 4){
+                current_mode == 0;
+                //change image to X
+            }
+            else{
+                current_mode+=1;
+                //change image to X
+            }
+        }
+    }
+    
+    // delay(5000);
 
     Serial.print("connecting to ");
     Serial.println(host);
@@ -58,7 +94,7 @@ void loop()
 
     // We now create a URI for the request
     String url = "/log/";
-    url += "testLogging via M5Stack";
+    url += mode;
 
     Serial.print("Requesting URL: ");
     Serial.println(url);
