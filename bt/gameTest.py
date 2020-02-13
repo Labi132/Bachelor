@@ -20,7 +20,6 @@ from bottleTest import Bottle
 from views.images import Images, ImageList
 from views.tangible import Tangible, Circle
 
-
 white = [255, 255, 255]
 
 HIGHLIGHT = 0
@@ -119,7 +118,8 @@ def main():
     event_source = EventFire()
     bottle = Bottle(event_source)
     threading.Thread(target=bottle.run).start()
-    # threading.Thread(target=bottle.run()).start()
+
+
     # Aus Jürgens Code
     sys.setrecursionlimit(10000)
     mp = MessageParser(event_source)
@@ -205,8 +205,12 @@ def main():
             if event.type == TANGIBLEMOVE:
                 # Drag
                 if event.who.get_class_id() == DRAG:
+                    if deaths[DRAG]:
+                        collisions[DRAG] = []
+                        tang[DRAG].set_center(
+                            event.who.get_bounds_component().get_position())
                     deaths[DRAG] = False
-                    once_drag = False
+                    tang[DRAG].set_lockable(True)
                     tang[DRAG].set_alive(deaths[DRAG])
                     log(tang[DRAG])
                     move_pos = tang[DRAG].get_center()
@@ -215,10 +219,6 @@ def main():
                     current_center = tang[DRAG].get_center()
                     delta = (move_pos[0] - current_center[0],
                              move_pos[1] - current_center[1])
-                    for x in lockList:
-                        image_center = x.get_center()
-                        x.set_center(image_center[0] - delta[0],
-                                     image_center[1] - delta[1])
                     if collisions[DRAG] != [] and tang[DRAG].get_lockable():
                         for x in collisions[DRAG]:
                             if not x.get_locked():
@@ -228,7 +228,10 @@ def main():
                                     if y not in collisions[DRAG]:
                                         y.unlock()
                                         lockList.remove(y)
-                    tang[DRAG].set_lockable(True)
+                    for x in lockList:
+                        image_center = x.get_center()
+                        x.set_center(image_center[0] - delta[0],
+                                     image_center[1] - delta[1])
 
                 # Highlight
                 if event.who.get_class_id() == HIGHLIGHT:  # HIGHLIGHTING GEHT
@@ -268,12 +271,12 @@ def main():
 
                 # Zoom
                 if event.who.get_class_id() == ZOOM:
+                    log(tang[ZOOM])
                     if deaths[ZOOM]:
                         deaths[ZOOM] = False
                         tang[ZOOM].set_alive(deaths[ZOOM])
-                        log(tang[ZOOM])
                         tang[ZOOM].set_center(
-                         event.who.get_bounds_component().get_position())
+                            event.who.get_bounds_component().get_position())
                         zoom_center = tang[ZOOM].get_center()
                     if zoom_center[0] < 900:
                         align_right = True
@@ -297,11 +300,11 @@ def main():
                 if event.who.get_class_id() == PAN:
                     tang[PAN].set_center(
                         event.who.get_bounds_component().get_position())
+                    log(tang[PAN])
                     if deaths[PAN]:
                         print("IF LOOP PAN")
                         deaths[PAN] = False
                         tang[PAN].set_alive(deaths[PAN])
-                        log(tang[PAN])
                         tang[PAN].set_center(
                             event.who.get_bounds_component().get_position())
                         pan_center = tang[PAN].get_center()
@@ -312,19 +315,15 @@ def main():
                     if pan_delta[0] > pan_tolerance:  # rechts
                         current_offset[0] = current_offset[0] - offset_rate
                         offset_changed = True
-                    if pan_delta[0] < -1*pan_tolerance:  # links
+                    if pan_delta[0] < -1 * pan_tolerance:  # links
                         current_offset[0] = current_offset[0] + offset_rate
                         offset_changed = True
                     if pan_delta[1] > pan_tolerance:  # hoch
                         current_offset[1] = current_offset[1] + offset_rate
                         offset_changed = True
-                    if pan_delta[1] < -1*pan_tolerance:  # runter
+                    if pan_delta[1] < -1 * pan_tolerance:  # runter
                         current_offset[1] = current_offset[1] - offset_rate
                         offset_changed = True
-
-
-
-
 
                     """
                     Ablauf kreis:
@@ -402,24 +401,24 @@ def main():
                     log(tang[GROUP])
                     timer_group = time.perf_counter()
 
-        # Collision
-        for x in tang.keys():
-            collisions[x] = pygame.sprite.spritecollide(tang[x],
-                                                        image_list, False)
 
         # Handle all death flags
-        if deaths[
-            DRAG] and time.perf_counter() - timer_drag > timer_delay and not once_drag:
-            delta = (0, 0)
+        if deaths[DRAG] and time.perf_counter() - timer_drag > timer_delay:
             tang[DRAG].set_lockable(False)
-            once_drag = True
+            collisions[DRAG] = []
             for x in lockList:
                 x.unlock()
                 lockList.remove(x)
+
         if deaths[HIGHLIGHT] and time.perf_counter() - \
                 timer_highlight > timer_delay and not once_highlight:
             once_highlight = True
             collisions[HIGHLIGHT] = []
+
+        # Collision
+        for x in tang.keys():
+            collisions[x] = pygame.sprite.spritecollide(tang[x],
+                                                        image_list, False)
 
             # PAN offset application
         if offset_changed:
