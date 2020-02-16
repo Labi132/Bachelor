@@ -18,7 +18,7 @@ from EventFire import EventFire
 from bottleTest import Bottle
 
 from views.images import Images, ImageList
-from views.tangible import Tangible
+from views.tangible import Tangible, Circle
 
 white = [255, 255, 255]
 
@@ -28,20 +28,33 @@ GROUP = 2
 PAN = 3
 ZOOM = 4
 
-images = {'views/Bilder/city/c1.jpg', 'views/Bilder/city/c2.jpg',
-          'views/Bilder/city/c3.jpg', 'views/Bilder/food/f1.jpg',
-          'views/Bilder/food/f2.jpg', 'views/Bilder/food/f3.jpg',
-          'views/Bilder/food/f4.jpg', 'views/Bilder/food/f5.jpg',
-          'views/Bilder/food/f6.jpg', 'views/Bilder/food/f7.jpg',
-          'views/Bilder/pet/p1.jpg', 'views/Bilder/pet/p2.jpg',
-          'views/Bilder/pet/p3.jpg', 'views/Bilder/pet/p4.jpg',
-          'views/Bilder/pet/p5.jpg', 'views/Bilder/pet/p6.jpg',
-          'views/Bilder/pet/p7.jpg', 'views/Bilder/vacation/v1.jpg',
-          'views/Bilder/vacation/v2.jpg', 'views/Bilder/vacation/v3.jpg',
-          'views/Bilder/vacation/v4.jpg', 'views/Bilder/vacation/v5.jpg',
-          'views/Bilder/vacation/v6.jpg', 'views/Bilder/vacation/v7.jpg',
-          'views/Bilder/screenshot/s1.PNG', 'views/Bilder/screenshot/s2.PNG',
-          'views/Bilder/screenshot/s3.PNG'}
+images = {('views/Bilder/city/c1.jpg', 'city'),
+          ('views/Bilder/city/c2.jpg', 'city'),
+          ('views/Bilder/city/c3.jpg', 'city'),
+          ('views/Bilder/food/f1.jpg', 'food'),
+          ('views/Bilder/food/f2.jpg', 'food'),
+          ('views/Bilder/food/f3.jpg', 'food'),
+          ('views/Bilder/food/f4.jpg', 'food'),
+          ('views/Bilder/food/f5.jpg', 'food'),
+          ('views/Bilder/food/f6.jpg', 'food'),
+          ('views/Bilder/food/f7.jpg', 'food'),
+          ('views/Bilder/pet/p1.jpg', 'pet'),
+          ('views/Bilder/pet/p2.jpg', 'pet'),
+          ('views/Bilder/pet/p3.jpg', 'pet'),
+          ('views/Bilder/pet/p4.jpg', 'pet'),
+          ('views/Bilder/pet/p5.jpg', 'pet'),
+          ('views/Bilder/pet/p6.jpg', 'pet'),
+          ('views/Bilder/pet/p7.jpg', 'pet'),
+          ('views/Bilder/vacation/v1.jpg', 'vacation'),
+          ('views/Bilder/vacation/v2.jpg', 'vacation'),
+          ('views/Bilder/vacation/v3.jpg', 'vacation'),
+          ('views/Bilder/vacation/v4.jpg', 'vacation'),
+          ('views/Bilder/vacation/v5.jpg', 'vacation'),
+          ('views/Bilder/vacation/v6.jpg', 'vacation'),
+          ('views/Bilder/vacation/v7.jpg', 'vacation'),
+          ('views/Bilder/screenshot/s1.PNG', 'screen'),
+          ('views/Bilder/screenshot/s2.PNG', 'screen'),
+          ('views/Bilder/screenshot/s3.PNG', 'screen')}
 
 positions = {
     (200, 100), (200, 350), (200, 600), (200, 850),
@@ -51,13 +64,6 @@ positions = {
     (1200, 100), (1200, 350), (1200, 600), (1200, 850),
     (1450, 100), (1450, 350), (1450, 600), (1450, 850),
     (1700, 100), (1700, 350), (1700, 600)}
-
-"""positions = {
-    (200, 100), (200, 350), (200, 600), (200, 850), (200, 1100), (200, 1350),
-    (450, 100), (450, 350), (450, 600), (450, 850), (450, 1100), (450, 1350),
-    (700, 100), (700, 350), (700, 600), (700, 850), (700, 1100),
-    (950, 100), (950, 350), (950, 600), (950, 850), (950, 1100),
-    (1200, 100), (1200, 350), (1200, 600), (1200, 850), (1200, 1100)}"""
 
 tangibles = {HIGHLIGHT: 0, DRAG: 1, GROUP: 2, PAN: 3, ZOOM: 4}
 tang = {}
@@ -101,17 +107,28 @@ def log(tangible):
 
 # define a main function
 def main():
+    # Highlight
     highlight_coll = []
+
+    # Pan
     old_offset = [0, 0]
     current_offset = [0, 0]
     offset_rate = 3
     offset_changed = False
+    pan_circle = Circle()
+    pan_tolerance = 50
+
+    # Zoom
     zoomed_img = None
+
+    # Event Source for Servers
     event_source = EventFire()
+
+    # Bottle Server
     bottle = Bottle(event_source)
-    # bottle.run()
     threading.Thread(target=bottle.run).start()
-    # threading.Thread(target=bottle.run()).start()
+
+
     # Aus Jürgens Code
     sys.setrecursionlimit(10000)
     mp = MessageParser(event_source)
@@ -147,8 +164,12 @@ def main():
     TANGIBLESWITCH = pygame.USEREVENT + 3
 
     clock = pygame.time.Clock()
-    # create a surface on screen that has the size of 240 x 180
+
+
+    # create a surface on screen
     screen = pygame.display.set_mode((0, 0), pygame.NOFRAME)
+    print(screen.get_width())
+    print(screen.get_height())
 
     tangible_list = pygame.sprite.LayeredUpdates()
     create_tangibles(tangible_list)
@@ -197,8 +218,12 @@ def main():
             if event.type == TANGIBLEMOVE:
                 # Drag
                 if event.who.get_class_id() == DRAG:
+                    if deaths[DRAG]:
+                        collisions[DRAG] = []
+                        tang[DRAG].set_center(
+                            event.who.get_bounds_component().get_position())
                     deaths[DRAG] = False
-                    once_drag = False
+                    tang[DRAG].set_lockable(True)
                     tang[DRAG].set_alive(deaths[DRAG])
                     log(tang[DRAG])
                     move_pos = tang[DRAG].get_center()
@@ -207,10 +232,6 @@ def main():
                     current_center = tang[DRAG].get_center()
                     delta = (move_pos[0] - current_center[0],
                              move_pos[1] - current_center[1])
-                    for x in lockList:
-                        image_center = x.get_center()
-                        x.set_center(image_center[0] - delta[0],
-                                     image_center[1] - delta[1])
                     if collisions[DRAG] != [] and tang[DRAG].get_lockable():
                         for x in collisions[DRAG]:
                             if not x.get_locked():
@@ -220,7 +241,10 @@ def main():
                                     if y not in collisions[DRAG]:
                                         y.unlock()
                                         lockList.remove(y)
-                    tang[DRAG].set_lockable(True)
+                    for x in lockList:
+                        image_center = x.get_center()
+                        x.set_center(image_center[0] - delta[0],
+                                     image_center[1] - delta[1])
 
                 # Highlight
                 if event.who.get_class_id() == HIGHLIGHT:  # HIGHLIGHTING GEHT
@@ -260,19 +284,20 @@ def main():
 
                 # Zoom
                 if event.who.get_class_id() == ZOOM:
-                    zoom_death = False
-                    tang[ZOOM].set_alive(deaths[ZOOM])
                     log(tang[ZOOM])
-                    tang[ZOOM].set_center(
-                        event.who.get_bounds_component().get_position())
-                    zoom_center = tang[ZOOM].get_center()
-                    if zoom_center[0] < 900:
+                    if deaths[ZOOM]:
+                        deaths[ZOOM] = False
+                        tang[ZOOM].set_alive(deaths[ZOOM])
+                        tang[ZOOM].set_center(
+                            event.who.get_bounds_component().get_position())
+                        zoom_center = tang[ZOOM].get_center()
+                    if zoom_center[0] < 960:
                         align_right = True
                     else:
                         align_right = False
                     if collisions[ZOOM]:
                         if len(collisions[ZOOM]) > 1:
-                            # TODO: make sure only biggest overlap is used
+                            zoomed_img = collisions[ZOOM][0]
                             pass
                         else:
                             zoomed_img = collisions[ZOOM][0]
@@ -284,14 +309,35 @@ def main():
                     else:
                         zoomed_img = None
 
-                # PAN
+                # PAN mit Kreis
                 if event.who.get_class_id() == PAN:
-                    deaths[PAN] = False
-                    tang[PAN].set_alive(deaths[PAN])
-                    log(tang[PAN])
                     tang[PAN].set_center(
                         event.who.get_bounds_component().get_position())
-                    pan_center = tang[PAN].get_center()
+                    log(tang[PAN])
+                    if deaths[PAN]:
+                        deaths[PAN] = False
+                        tang[PAN].set_alive(deaths[PAN])
+                        tang[PAN].set_center(
+                            event.who.get_bounds_component().get_position())
+                        pan_center = tang[PAN].get_center()
+                        pan_circle.set_center(pan_center)
+                    tang_pan_center = tang[PAN].get_center()
+                    pan_delta = (tang_pan_center[0] - pan_center[0],
+                                 tang_pan_center[1] - pan_center[1])
+                    if pan_delta[0] > pan_tolerance:  # rechts
+                        current_offset[0] = current_offset[0] - offset_rate
+                        offset_changed = True
+                    if pan_delta[0] < -1 * pan_tolerance:  # links
+                        current_offset[0] = current_offset[0] + offset_rate
+                        offset_changed = True
+                    if pan_delta[1] > pan_tolerance:  # hoch
+                        current_offset[1] = current_offset[1] + offset_rate
+                        offset_changed = True
+                    if pan_delta[1] < -1 * pan_tolerance:  # runter
+                        current_offset[1] = current_offset[1] - offset_rate
+                        offset_changed = True
+
+                """
                     if pan_center[0] < 200 and pan_center[
                         1] < 200:  # LEFT AND UP
                         current_offset[0] = current_offset[0] + offset_rate
@@ -324,6 +370,7 @@ def main():
                     if pan_center[1] > 950:  # DOWN
                         current_offset[1] = current_offset[1] - offset_rate
                         offset_changed = True
+                    """
 
             if event.type == TANGIBLEDEATH:
                 if event.who.get_class_id() == DRAG:
@@ -357,24 +404,23 @@ def main():
                     log(tang[GROUP])
                     timer_group = time.perf_counter()
 
-        # Collision
-        for x in tang.keys():
-            collisions[x] = pygame.sprite.spritecollide(tang[x],
-                                                        image_list, False)
-
         # Handle all death flags
-        if deaths[
-            DRAG] and time.perf_counter() - timer_drag > timer_delay and not once_drag:
-            delta = (0, 0)
+        if deaths[DRAG] and time.perf_counter() - timer_drag > timer_delay:
             tang[DRAG].set_lockable(False)
-            once_drag = True
+            collisions[DRAG] = []
             for x in lockList:
                 x.unlock()
                 lockList.remove(x)
+
         if deaths[HIGHLIGHT] and time.perf_counter() - \
                 timer_highlight > timer_delay and not once_highlight:
             once_highlight = True
             collisions[HIGHLIGHT] = []
+
+        # Collision
+        for x in tang.keys():
+            collisions[x] = pygame.sprite.spritecollide(tang[x],
+                                                        image_list, False)
 
             # PAN offset application
         if offset_changed:
@@ -391,7 +437,9 @@ def main():
         tangible_list.draw(screen)
         image_list.draw(screen)
         if zoomed_img is not None:
-            zoomed_img.draw_unscaled(screen, zoom_center)
+            zoomed_img.draw_unscaled(screen, align_right)
+        if not deaths[PAN]:
+            pan_circle.draw(screen)
         pygame.display.flip()
         clock.tick(30)
 
