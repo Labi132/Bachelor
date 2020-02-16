@@ -3,6 +3,7 @@ import pygame
 white = [255, 255, 255]
 red = [255, 0, 0]
 
+
 class Tangible(pygame.sprite.Sprite):
     offset = -50
 
@@ -40,6 +41,9 @@ class Tangible(pygame.sprite.Sprite):
     def get_lockable(self):
         return self.lockable
 
+    def invert_lockable(self):
+        self.lockable = not self.lockable
+
     def get_id(self):
         return self.id
 
@@ -51,3 +55,20 @@ class Tangible(pygame.sprite.Sprite):
 
     def get_alive(self):
         return self.alive
+
+
+class Circle:
+    def __init__(self):
+        self.x = -500
+        self.y = -500
+        self.radius = 200
+        self.color = [0, 0, 255]
+
+    def set_center(self, new_coords):
+        self.x, self.y = new_coords
+
+    def get_center(self):
+        return (self.x, self.y)
+
+    def draw(self, screen):
+        pygame.draw.circle(screen, self.color, (self.x, self.y), self.radius, 5)
