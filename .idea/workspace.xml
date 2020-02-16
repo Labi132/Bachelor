@@ -119,12 +119,13 @@
       <screen x="0" y="31" width="1920" height="1000" />
     </state>
     <state x="449" y="168" key="SettingsEditor/0.31.1920.1000/0.31.1920.1000@0.31.1920.1000" timestamp="1580826686363" />
+    <state x="1313" y="641" key="com.intellij.ide.util.TipDialog" timestamp="1581893214659">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="1313" y="641" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1581893214659" />
     <state x="623" y="251" width="672" height="678" key="search.everywhere.popup" timestamp="1580828435266">
       <screen x="0" y="31" width="1920" height="1000" />
     </state>
     <state x="623" y="251" width="672" height="678" key="search.everywhere.popup/0.31.1920.1000/0.31.1920.1000@0.31.1920.1000" timestamp="1580828435266" />
-  </component>
-  <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Eder_Bachelor$gameTest.coverage" NAME="gameTest Coverage Results" MODIFIED="1580837255138" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/bt" />
   </component>
 </project>
