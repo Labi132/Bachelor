@@ -27,9 +27,10 @@ class Images(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, self.scalesize)
         self.rect = self.image.get_rect()
         self.tag = image[1]
+        self.name = image[0]
 
         self.font = pygame.font.SysFont('Arial', 14)
-        self.textSurf = self.font.render(image[0], 1, [0, 0, 0])
+        self.textSurf = self.font.render(self.name, 1, [0, 0, 0])
         self.text_rect = self.textSurf.get_rect()
         self.text_rect.center = self.rect.center
         self.current_screen = screen
@@ -53,6 +54,9 @@ class Images(pygame.sprite.Sprite):
 
     def change_screen(self, screen, pos):
         if self.active:
+            print("SELF CURRENT: " + str(self.current_screen))
+            print("TAG:" + str(self.tag))
+            print(screen)
             self.current_screen = screen
             self.set_center(pos[0], pos[1])
 
@@ -117,13 +121,19 @@ class Images(pygame.sprite.Sprite):
             return self.light_changed
 
     def update(self, current_s):
-        print(self.current_screen)
         if self.current_screen == current_s:
             self.active = True
         else:
             self.un_highlight()
             self.unlock()
             self.active = False
+
+    def get_correct(self):
+        if self.current_screen == self.tag:
+            return True
+        else:
+            return False
+
 
 
 class ImageFolder(pygame.sprite.Sprite):
