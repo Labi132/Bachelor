@@ -16,9 +16,10 @@ const char* host = "192.168.0.92";
 
 void setup()
 {
+    delay(5000);
     Serial.begin(115200);
     delay(10);
-    M5.begin()
+    M5.begin(true, true, true);
 
     // We start by connecting to a WiFi network
 
@@ -27,7 +28,7 @@ void setup()
     Serial.print("Connecting to ");
     Serial.println(ssid);
 
-    WiFi.begin(ssid, password);
+    /*WiFi.begin(ssid, password);
 
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
@@ -38,49 +39,47 @@ void setup()
     Serial.println("WiFi connected");
     Serial.println("IP address: ");
     Serial.println(WiFi.localIP());
+    */
     
-    M5.Lcd.setBrightness(200);
+    M5.Lcd.setBrightness(255);
 }
 
-String mode[5] = {"highlight", "drag", "group", "pan", "zoom"};
+String mode[5] = {"drag", "highlight", "group", "pan", "zoom"};
 int current_mode = 0;
-bool a_pressed;
-bool c_pressed;
-
-void set_diplay(){
-     M5.Lcd.drawJpgFile(SD, "/p" + (String) current_mode + ".jpg");
-}
 
 void loop()
 {
-    a_pressed = M5.BtnA.read();
-    c_pressed = M5.BtnC.read();
-    unsigned long button_timeout = millis();
-    if (millis()-button_timeout > 1000){
-        if (a_pressed == true){
+        M5.BtnA.read();
+        M5.BtnC.read();
+
+        //Serial.println(M5.BtnA.read());
+        if (M5.BtnA.wasReleased()){
             if(current_mode == 0){
-                current_mode == 4;
-                //change image to X
+                current_mode = 4;
             }
             else{
                 current_mode-=1;
-                //change image to X
             }
         }
-        if (c_pressed == true){
+        if (M5.BtnC.wasReleased()){
             if(current_mode == 4){
-                current_mode == 0;
-                //change image to X
+                current_mode = 0;
             }
             else{
                 current_mode+=1;
-                //change image to X
             }
         }
-    }
-    
-    // delay(5000);
+        
+        switch(current_mode){
+          case 0: M5.Lcd.drawJpgFile(SD, "/drag.jpg", 0, 0, 320, 240); break;
+          case 1: M5.Lcd.drawJpgFile(SD, "/highlight.jpg", 0, 0, 320, 240); break;
+          case 2: M5.Lcd.drawJpgFile(SD, "/group.jpg", 0, 0, 320, 240); break;
+          case 3: M5.Lcd.drawJpgFile(SD, "/pan.jpg", 0, 0, 320, 240); break;
+          case 4: M5.Lcd.drawJpgFile(SD, "/zoom.jpg", 0, 0, 320, 240); break;
+          default: break;
+        }
 
+    /*
     Serial.print("connecting to ");
     Serial.println(host);
 
@@ -94,7 +93,7 @@ void loop()
 
     // We now create a URI for the request
     String url = "/log/";
-    url += mode;
+    url += mode[current_mode];
 
     Serial.print("Requesting URL: ");
     Serial.println(url);
@@ -117,7 +116,7 @@ void loop()
         String line = client.readStringUntil('\r');
         Serial.print(line);
     }
-
     Serial.println();
     Serial.println("closing connection");
+    */
 }
