@@ -29,7 +29,7 @@ class Images(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, self.scalesize)
         self.rect = self.image.get_rect()
         self.tag = image[1]
-        self.name = image[0]
+        self.name = image[0][-11:]
         self.has_changed = False
 
         self.font = pygame.font.SysFont('Arial', 14)
