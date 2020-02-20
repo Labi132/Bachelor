@@ -66,7 +66,7 @@ positions = {
     (1600, 100), (1600, 350), (1600, 600),
     (1850, 100), (1850, 350), (1850, 600)}
 
-tangibles = {HIGHLIGHT: 0, DRAG: 1, GROUP: 2, PAN: 3, ZOOM: 4}
+tangibles = {HIGHLIGHT: 0, DRAG: 1, ZOOM: 2, PAN: 3, GROUP: 4}
 tang = {}
 
 folders = {}
@@ -252,11 +252,11 @@ def main():
     dragable_list.add(city_folder, vacation_folder, pet_folder, food_folder,
                       screen_folder)
 
-    collisions_img_folders = [None, None, None, None, None]
+    collisions_img_folders = [None, None, None, None, None] # one none per flolder
 
     collisions_open_folders = []
 
-    collisions_tangibles = [None, None, None, None, None]
+    collisions_tangibles = [None, None, None] # one none per tangible where collision is relevant
 
     # define a variable to control the main loop
     running = True
@@ -267,8 +267,15 @@ def main():
 
         if pos_counter+1 == len(pos_list):
             pos_counter = 0
+
         # Collision
+        # TODO: Zoom ordner, ordnen im ordner, bug beim groupen im gleichen ordner, odener tag updaten bei screen wechsel
         for x in tang.keys():
+            if x == PAN or x == GROUP:
+                pass;
+            else:
+                collisions_tangibles[x] = pygame.sprite.spritecollide(tang[x], dragable_list, False)
+            """
             if x != DRAG:
                 if x != HIGHLIGHT:
                     collisions_tangibles[x] = pygame.sprite.spritecollide(
@@ -281,6 +288,7 @@ def main():
                 collisions_tangibles[x] = pygame.sprite.spritecollide(tang[x],
                                                                       dragable_list,
                                                                       False)
+                                                                      """
 
         for x in folders.keys():
             collisions_img_folders[x] = pygame.sprite.spritecollide(folders[x],
@@ -322,16 +330,17 @@ def main():
 
             if event.type == TANGIBLEMOVE:
                 # move tangibles into folders
-                for i in range(len(collisions_img_folders)):
-                    # k = 0
+                if deaths[PAN]:
+                    for i in range(len(collisions_img_folders)):
+                        # k = 0
 
-                    if collisions_img_folders[i]:
-                        for x in collisions_img_folders[i]:
-                            print("I: " + str(i))
-                            x.change_screen(screens[i], pos_list[pos_counter])
-                            if pos_counter + 1 == len(pos_list):
-                                pos_counter = 0
-                            pos_counter += 1
+                        if collisions_img_folders[i]:
+                            for x in collisions_img_folders[i]:
+                                x.change_screen(screens[i],
+                                                pos_list[pos_counter])
+                                if pos_counter + 1 == len(pos_list):
+                                    pos_counter = 0
+                                pos_counter += 1
 
                 # Drag
                 if event.who.get_class_id() == DRAG:
@@ -454,10 +463,10 @@ def main():
                     pan_delta = (tang_pan_center[0] - pan_center[0],
                                  tang_pan_center[1] - pan_center[1])
                     if pan_delta[0] > pan_tolerance:  # rechts
-                        current_offset[0] = current_offset[0] - offset_rate
+                        current_offset[0] = current_offset[0] + offset_rate
                         offset_changed = True
                     if pan_delta[0] < -1 * pan_tolerance:  # links
-                        current_offset[0] = current_offset[0] + offset_rate
+                        current_offset[0] = current_offset[0] - offset_rate
                         offset_changed = True
                     if pan_delta[1] > pan_tolerance:  # hoch
                         current_offset[1] = current_offset[1] + offset_rate
@@ -521,7 +530,7 @@ def main():
         if offset_changed:
             offset_delta = [current_offset[0] - old_offset[0],
                             current_offset[1] - old_offset[1]]
-            for x in image_list:
+            for x in dragable_list:
                 x.move(offset_delta[0], offset_delta[1])
             offset_changed = False
             old_offset[0] += offset_delta[0]
