@@ -82,12 +82,13 @@ folders_invers = {'city': 0, 'vacation': 1, 'pet': 2, 'food': 3, 'screen': 4,
 screens = {0: 'city', 1: 'vacation', 2: 'pet', 3: 'food',
            4: 'screen', 5: 'main'}
 
-events = {25: "Movement", 26: "Death", 27: "Switch"}
+events = {12: "Quit", 25: "Movement", 26: "Death", 27: "Switch"}
 
 image_counts = {'screen': 3, 'city': 3, 'vacation': 7, 'pet': 7, 'food': 7}
 
 PID = None
 INTERACTION = "Multiple"
+
 
 logging.basicConfig(filename='log.txt', format='%(asctime)s %(message)s',
                     level=logging.INFO)
@@ -150,7 +151,8 @@ def check_ending(imgl):
     for x in imgl:
         if not x.get_correct():
             return False
-    return True
+    my_event = pygame.event.Event(pygame.QUIT)
+    pygame.event.post(my_event)
 
 
 def reset_folder_position(folderl):
@@ -223,6 +225,35 @@ def start_servers(event_source):
     # ENDE KOPIERTER CODE HIER
 
 
+def img_folder_collision(collisions_img_folders, image_counter, current_screen):
+    for i in range(len(collisions_img_folders)):
+        if collisions_img_folders[i]:
+            for x in collisions_img_folders[i]:
+                if x.get_active():
+                    prev = x.get_screen()
+                    if x.get_screen() == folders[i].get_tag():
+                        if prev != screens[5]:
+                            y = folders_invers[prev]
+                            folders[y].remove_item(x)
+                        x.change_screen(screens[5])
+                        image_counter += 1
+                    else:
+                        if prev != screens[5]:
+                            y = folders_invers[prev]
+                            folders[y].remove_item(x)
+                        else:
+                            image_counter -= 1
+                        x.change_screen(screens[i])
+                        folders[i].add_item(x)
+                x.update(current_screen)
+
+
+def tangible_alive(tang, event, mode):
+    tang.set_alive(True)
+    log(tang, event.type, mode)
+    tang.set_center(event.who.get_bounds_component().get_position())
+
+
 # define a main function
 def main():
     pos_list = list(positions)
@@ -230,17 +261,16 @@ def main():
 
     # Highlight
     highlight_coll = []
-    testlog = "PID, Interaction Style, Mode, Eventtype, ID, Dead, Center"
+    testlog = "PID, Interaction Style, Mode, Event-type, ID, Alive?, Center"
     logging.info(testlog)
 
     # Pan
     old_offset = [0, 0]
     current_offset = [0, 0]
     offset_rate = 3
-    pan_tolerance = 50
+    pan_tolerance = 40
     offset_changed = False
     pan_circle = Circle()
-
 
     mode = None
 
@@ -260,9 +290,8 @@ def main():
     # create a surface on screen
     screen = pygame.display.set_mode((0, 0), pygame.NOFRAME)
 
-    tangible_list = pygame.sprite.LayeredUpdates()
+    tangible_list = pygame.sprite.Group()
     create_tangibles(tangible_list)
-    tang[DRAG].set_lockable(True)
 
     dragable_list = pygame.sprite.Group()
     folder_list = pygame.sprite.Group()
@@ -276,12 +305,6 @@ def main():
     """Flags und Timer um zu schnelles bewegen als Fehler etwas zu vermindern"""
     timer_drag = time.perf_counter()
     timer_highlight = time.perf_counter()
-
-    alive = {HIGHLIGHT: tang[HIGHLIGHT].get_alive(),
-             DRAG: tang[DRAG].get_alive(),
-             GROUP: tang[GROUP].get_alive(),
-             PAN: tang[PAN].get_alive(),
-             ZOOM: tang[ZOOM].get_alive()}
     timer_delay = 0.5
 
     """Flags damit die endgültigen death events nur einmal pro death ausgelöst 
@@ -299,8 +322,8 @@ def main():
                               None]  # one none per folder
 
     collisions_tangibles = [None, None, None, None,
-                            None]   # one none per tangible where collision
-                                    # is relevant
+                            None]  # one none per tangible where collision
+    # is relevant
 
     # define a variable to control the main loop
     running = True
@@ -308,7 +331,6 @@ def main():
     # main loop
     while running:
         # event handling, gets all event from the event queue
-
         # Collision
         # TODO: Zoom ordner?, bug beim groupen im gleichen ordner reproduzeiren und fixen, list-Error beim ordnerwechsel fixen
         for x in tang.keys():
@@ -328,13 +350,15 @@ def main():
                                                               folder_list,
                                                               False)
 
-        if check_ending(image_list):
-            running = False
-            server.shutdown()
-            pygame.quit()
-            sys.exit()
+        check_ending(image_list)
 
         for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+                server.shutdown()
+                pygame.quit()
+                sys.exit()
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
@@ -342,6 +366,7 @@ def main():
                     pygame.quit()
                     sys.exit()
 
+            #TODO: Implement single tangible variant
             if event.type == TANGIBLESWITCH:
                 log(tang[event.who.get_class_id()], event.type, mode)
                 mode = event.mode
@@ -349,54 +374,24 @@ def main():
 
             if event.type == TANGIBLEMOVE:
                 # move tangibles into folders
-                if not alive[PAN]:
-                    for i in range(len(collisions_img_folders)):
-                        if collisions_img_folders[i]:
-                            for x in collisions_img_folders[i]:
-                                if x.get_active():
-                                    prev = x.get_screen()
-                                    if x.get_screen() == folders[i].get_tag():
-                                        if prev != screens[5]:
-                                            y = folders_invers[prev]
-                                            folders[y].remove_item(x)
-                                        x.change_screen(screens[5])
-                                        image_counter += 1
-                                    else:
-                                        if prev != screens[5]:
-                                            y = folders_invers[prev]
-                                            folders[y].remove_item(x)
-                                        else:
-                                            image_counter -= 1
-                                        x.change_screen(screens[i])
-                                        folders[i].add_item(x)
-                                x.update(current_screen)
-                    """                
-                    else:
-                        group_collide = pygame.sprite.spritecollide(tangibles[GROUP], folder_list, False)
-                        if group_collide:
-                            for x in image_list:
-                                prev = x.get_screen()
-                                if x.get_highlight:
-                                    x.change_screen
-                                    group_collide[0].add_item(x)
-                    """
+                if not tang[PAN].get_alive():
+                    img_folder_collision(collisions_img_folders, image_counter,
+                                         current_screen)
 
                 # Drag
                 if event.who.get_class_id() == DRAG:
-                    if not alive[DRAG]:
+                    if not tang[DRAG].get_alive():
                         collisions_tangibles[DRAG] = []
                         tang[DRAG].set_center(
                             event.who.get_bounds_component().get_position())
                         tang[DRAG].set_lockable(True)
-                    alive[DRAG] = True
-                    tang[DRAG].set_alive(alive[DRAG])
-                    log(tang[DRAG], event.type, mode)
+
                     move_pos = tang[DRAG].get_center()
-                    tang[DRAG].set_center(
-                        event.who.get_bounds_component().get_position())
+                    tangible_alive(tang[DRAG], event, mode)
                     current_center = tang[DRAG].get_center()
                     delta = (move_pos[0] - current_center[0],
                              move_pos[1] - current_center[1])
+
                     if collisions_tangibles[DRAG] != [] and tang[
                         DRAG].get_lockable():
                         for x in collisions_tangibles[DRAG]:
@@ -412,16 +407,15 @@ def main():
                         try:
                             x.set_center(image_center[0] - delta[0],
                                          image_center[1] - delta[1])
-                        except:
+                        except TypeError:
                             pass
 
-                # Highlight
-                # TODO: TESTEN OB RESETTEN DER FOLDER BESSER ANKOMMT ALS NICHT RESETTEN
+                # Highlight TODO: TESTEN OB RESETTEN DER FOLDER BESSER ANKOMMT ALS NICHT RESETTEN
                 if event.who.get_class_id() == HIGHLIGHT:
+                    once_highlight = False
+                    tangible_alive(tang[HIGHLIGHT], event, mode)
                     if collisions_open_folders and not folder_once:
-                        # reset_image_positions(image_list, pos_list)
-                        if current_screen == collisions_open_folders[
-                            0].get_tag():
+                        if current_screen == collisions_open_folders[0].get_tag():
                             current_screen = screens[5]
                             image_list.update(current_screen)
                             reset_image_positions(image_list, pos_list)
@@ -431,14 +425,7 @@ def main():
                                 0].get_tag()
                             collisions_open_folders[0].reset_positions()
                             reset_folder_position(folder_list)
-
                         folder_once = True
-                    alive[HIGHLIGHT] = True
-                    once_highlight = False
-                    tang[HIGHLIGHT].set_alive(alive[HIGHLIGHT])
-                    log(tang[HIGHLIGHT], event.type, mode)
-                    tang[HIGHLIGHT].set_center(
-                        event.who.get_bounds_component().get_position())
                     if highlight_coll:
                         for x in highlight_coll:
                             if x not in collisions_tangibles[HIGHLIGHT]:
@@ -446,20 +433,14 @@ def main():
                                 highlight_coll.remove(x)
                     if collisions_tangibles[HIGHLIGHT]:
                         for x in collisions_tangibles[HIGHLIGHT]:
-                            try:
+                            if isinstance(x, Images):
                                 x.invert_highlight()
                                 x.set_light_changed(True)
                                 highlight_coll.append(x)
-                            except:
-                                pass
 
                 # Group
                 if event.who.get_class_id() == GROUP:  # Funktioniert, allerdings nicht animiert
-                    alive[GROUP] = True
-                    tang[GROUP].set_alive(alive[GROUP])
-                    log(tang[GROUP], event.type, mode)
-                    tang[GROUP].set_center(
-                        event.who.get_bounds_component().get_position())
+                    tangible_alive(tang[GROUP], event, mode)
                     group_center = tang[GROUP].get_center()
                     k = 0
                     for x in image_list:
@@ -472,21 +453,15 @@ def main():
 
                 # Zoom
                 if event.who.get_class_id() == ZOOM:
-                    log(tang[ZOOM], event.type, mode)
-                    tang[ZOOM].set_center(
-                        event.who.get_bounds_component().get_position())
+                    tangible_alive(tang[ZOOM], event, mode)
                     zoom_center = tang[ZOOM].get_center()
-                    if not alive[ZOOM]:
-                        alive[ZOOM] = True
-                        tang[ZOOM].set_alive(alive[ZOOM])
                     if zoom_center[0] < 960:
                         align_right = True
                     else:
                         align_right = False
                     if collisions_tangibles[ZOOM]:
-                        print(type(collisions_tangibles[ZOOM][0]))
-                        zoomed_img = collisions_tangibles[ZOOM][0]
-
+                        if isinstance(collisions_tangibles[ZOOM][0], Images):
+                            zoomed_img = collisions_tangibles[ZOOM][0]
                     else:
                         zoomed_img = None
 
@@ -495,9 +470,8 @@ def main():
                     tang[PAN].set_center(
                         event.who.get_bounds_component().get_position())
                     log(tang[PAN], event.type, mode)
-                    if not alive[PAN]:
-                        alive[PAN] = True
-                        tang[PAN].set_alive(alive[PAN])
+                    if not tang[PAN].get_alive():
+                        tang[PAN].set_alive(True)
                         tang[PAN].set_center(
                             event.who.get_bounds_component().get_position())
                         pan_center = tang[PAN].get_center()
@@ -520,9 +494,11 @@ def main():
 
             if event.type == TANGIBLEDEATH:
                 tangible_id = event.who.get_class_id()
-                alive[tangible_id] = False
-                tang[tangible_id].set_alive(alive[tangible_id])
+                tang[tangible_id].set_alive(False)
                 log(tang[tangible_id], event.type, mode)
+
+                if tangible_id == ZOOM:
+                    zoomed_img = None
 
                 if tangible_id == DRAG:
                     timer_drag = time.perf_counter()
@@ -530,14 +506,14 @@ def main():
                 if tangible_id == HIGHLIGHT:
                     timer_highlight = time.perf_counter()
 
-
         # Handle all death flags
-        if not alive[DRAG] and time.perf_counter() - timer_drag > timer_delay:
+        if not tang[DRAG].get_alive() and time.perf_counter() - \
+                timer_drag > timer_delay:
             death_drag(lockList)
             collisions_tangibles[DRAG] = []
 
-        if not alive[HIGHLIGHT] and time.perf_counter() - timer_highlight \
-                > timer_delay:
+        if not tang[HIGHLIGHT].get_alive() and time.perf_counter() - \
+                timer_highlight > timer_delay:
             collisions_tangibles[HIGHLIGHT] = []
             if not once_highlight:
                 tang[HIGHLIGHT].set_center((-500, -500))
@@ -556,16 +532,13 @@ def main():
 
         # DRAW
         screen.fill(white)
-
         for key in folders:
             folders[key].draw(screen)
-
-        # tangible_list.draw(screen)
         dragable_list.update(current_screen)
         image_list.draw(screen, current_screen)
         if zoomed_img is not None:
             zoomed_img.draw_unscaled(screen, align_right, current_screen)
-        if alive[PAN]:
+        if tang[PAN].get_alive():
             pan_circle.draw(screen)
         pygame.display.flip()
         clock.tick(30)

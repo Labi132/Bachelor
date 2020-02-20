@@ -1,6 +1,5 @@
 from bottle import route, run, get, post, request
 import waitress
-import threading
 import logging
 
 logging.basicConfig(filename='log.txt',format='%(asctime)s %(message)s',
@@ -18,5 +17,6 @@ class Bottle:
         pass
 
     def run(self):
-        run(server='waitress')
+        run(server='waitress', host='132.199.132.227', port='3030')
+        # IP: curl ipconfig.me
 
