@@ -9,8 +9,8 @@
 #include <WiFi.h>
 #include <M5Stack.h>
 
-const char* ssid     = "KDG-13ED3";
-const char* password = "tYhm3XCQPwQV";
+const char* ssid     = "AndroidAP";
+const char* password = "zstp2194";
 
 const char* host = "192.168.0.92";
 
@@ -28,7 +28,7 @@ void setup()
     Serial.print("Connecting to ");
     Serial.println(ssid);
 
-    /*WiFi.begin(ssid, password);
+    WiFi.begin(ssid, password);
 
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
@@ -39,13 +39,14 @@ void setup()
     Serial.println("WiFi connected");
     Serial.println("IP address: ");
     Serial.println(WiFi.localIP());
-    */
+    
     
     M5.Lcd.setBrightness(255);
 }
 
 String mode[5] = {"drag", "highlight", "group", "pan", "zoom"};
 int current_mode = 0;
+bool mode_changed = false;
 
 void loop()
 {
@@ -56,17 +57,21 @@ void loop()
         if (M5.BtnA.wasReleased()){
             if(current_mode == 0){
                 current_mode = 4;
+                mode_changed = true;
             }
             else{
                 current_mode-=1;
+                mode_changed = true;
             }
         }
         if (M5.BtnC.wasReleased()){
             if(current_mode == 4){
                 current_mode = 0;
+                mode_changed = true;
             }
             else{
                 current_mode+=1;
+                mode_changed = true;
             }
         }
         
@@ -79,7 +84,7 @@ void loop()
           default: break;
         }
 
-    /*
+    
     Serial.print("connecting to ");
     Serial.println(host);
 
@@ -91,13 +96,14 @@ void loop()
         return;
     }
 
-    // We now create a URI for the request
+    if (mode_changed == true){
+          // We now create a URI for the request
     String url = "/log/";
     url += mode[current_mode];
 
     Serial.print("Requesting URL: ");
     Serial.println(url);
-
+    
     // This will send the request to the server
     client.print(String("GET ") + url + " HTTP/1.1\r\n" +
                  "Host: " + host + "\r\n" +
@@ -108,15 +114,10 @@ void loop()
             Serial.println(">>> Client Timeout !");
             client.stop();
             return;
-        }
-    }
-
-    // Read all the lines of the reply from server and print them to Serial
-    while(client.available()) {
-        String line = client.readStringUntil('\r');
-        Serial.print(line);
+         }
+       }
     }
     Serial.println();
     Serial.println("closing connection");
-    */
+    
 }
