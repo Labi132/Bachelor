@@ -44,8 +44,8 @@ void setup()
     M5.Lcd.setBrightness(255);
 }
 
-String mode[5] = {"drag", "highlight", "group", "pan", "zoom"};
-int current_mode = 0;
+String mode[5] = {"HIGHLIGHT", "DRAG", "GROUP", "PAN", "ZOOM"};
+int current_mode = 1;
 bool mode_changed = false;
 
 void loop()
@@ -76,8 +76,8 @@ void loop()
         }
         
         switch(current_mode){
-          case 0: M5.Lcd.drawJpgFile(SD, "/drag.jpg", 0, 0, 320, 240); break;
-          case 1: M5.Lcd.drawJpgFile(SD, "/highlight.jpg", 0, 0, 320, 240); break;
+          case 0: M5.Lcd.drawJpgFile(SD, "/highlight.jpg", 0, 0, 320, 240); break;
+          case 1: M5.Lcd.drawJpgFile(SD, "/drag.jpg", 0, 0, 320, 240); break;
           case 2: M5.Lcd.drawJpgFile(SD, "/group.jpg", 0, 0, 320, 240); break;
           case 3: M5.Lcd.drawJpgFile(SD, "/pan.jpg", 0, 0, 320, 240); break;
           case 4: M5.Lcd.drawJpgFile(SD, "/zoom.jpg", 0, 0, 320, 240); break;
