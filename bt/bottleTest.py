@@ -25,8 +25,5 @@ class LogBottle(threading.Thread):
         pass
 
     def run(self):
-        # threading.Thread(target=run(server='waitress', host=self.host, port=self.port)).start()
-        # return
         run(server='waitress', host=self.host, port=self.port)
-        # run(host = self.host, port = self.port)
         # IP: curl ipconfig.me
