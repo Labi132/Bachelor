@@ -6,7 +6,7 @@ from datastructures.TrackableTypes import TrackableTypes, FileType
 #from datastructures.Mask import Mask
 
 
-from PyQt5 import QtCore, QtWidgets, QtGui
+# from PyQt5 import QtCore, QtWidgets, QtGui
 import math
 
 

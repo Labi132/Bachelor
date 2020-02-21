@@ -12,7 +12,7 @@
 const char* ssid     = "AndroidAP";
 const char* password = "zstp2194";
 
-const char* host = "192.168.0.92";
+const char* host = "132.199.132.227";
 
 void setup()
 {
@@ -90,7 +90,7 @@ void loop()
 
     // Use WiFiClient class to create TCP connections
     WiFiClient client;
-    const int httpPort = 8080;
+    const int httpPort = 3030;
     if (!client.connect(host, httpPort)) {
         Serial.println("connection failed");
         return;

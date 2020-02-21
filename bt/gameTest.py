@@ -15,7 +15,7 @@ from parsers.MessageTypes import MessageTypes
 
 from EventFire import EventFire
 
-from bottleTest import Bottle
+from bottleTest import LogBottle
 
 from views.images import Images, ImageList, ImageFolder
 from views.tangible import Tangible, Circle
@@ -192,13 +192,14 @@ def death_drag(lock_list):
 
 def start_servers(event_source):
     # Bottle Server
-    bottle = Bottle(event_source)
-    threading.Thread(target=bottle.run).start()
+    bottle = LogBottle(event_source)
+    bottle.start()
+    # threading.Thread(target=bottle.run).start()
 
     # Aus Jürgens Code
-    sys.setrecursionlimit(10000)
     mp = MessageParser(event_source)
 
+    print("JÜRGENS SERVER HIER")
     parser = argparse.ArgumentParser()
     parser.add_argument("--ip", default="127.0.0.1", help="The ip to listen on")
     parser.add_argument("--port", type=int, default=3333,
@@ -368,6 +369,8 @@ def main():
 
             #TODO: Implement single tangible variant
             if event.type == TANGIBLESWITCH:
+                pygame.quit()
+                sys.exit()
                 log(tang[event.who.get_class_id()], event.type, mode)
                 mode = event.mode
                 log(tang[event.who.get_class_id()], event.type, mode)

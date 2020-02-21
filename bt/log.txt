@@ -1,0 +1,25 @@
+2020-02-21 11:01:01,313 PID, Interaction Style, Mode, Event-type, ID, Alive?, Center
+2020-02-21 11:11:05,448 PID, Interaction Style, Mode, Event-type, ID, Alive?, Center
+2020-02-21 11:12:10,923 PID, Interaction Style, Mode, Event-type, ID, Alive?, Center
+2020-02-21 11:12:30,817 PID, Interaction Style, Mode, Event-type, ID, Alive?, Center
+2020-02-21 11:13:42,878 PID, Interaction Style, Mode, Event-type, ID, Alive?, Center
+2020-02-21 11:14:22,345 PID, Interaction Style, Mode, Event-type, ID, Alive?, Center
+2020-02-21 11:15:23,052 PID, Interaction Style, Mode, Event-type, ID, Alive?, Center
+2020-02-21 11:15:58,790 PID, Interaction Style, Mode, Event-type, ID, Alive?, Center
+2020-02-21 11:16:37,376 PID, Interaction Style, Mode, Event-type, ID, Alive?, Center
+2020-02-21 11:28:24,256 PID, Interaction Style, Mode, Event-type, ID, Alive?, Center
+2020-02-21 11:29:16,594 PID, Interaction Style, Mode, Event-type, ID, Alive?, Center
+2020-02-21 11:29:33,185 PID, Interaction Style, Mode, Event-type, ID, Alive?, Center
+2020-02-21 11:31:35,222 PID, Interaction Style, Mode, Event-type, ID, Alive?, Center
+2020-02-21 11:31:47,224 PID, Interaction Style, Mode, Event-type, ID, Alive?, Center
+2020-02-21 11:32:34,462 PID, Interaction Style, Mode, Event-type, ID, Alive?, Center
+2020-02-21 11:33:21,105 PID, Interaction Style, Mode, Event-type, ID, Alive?, Center
+2020-02-21 11:33:43,631 PID, Interaction Style, Mode, Event-type, ID, Alive?, Center
+2020-02-21 11:34:06,766 PID, Interaction Style, Mode, Event-type, ID, Alive?, Center
+2020-02-21 11:44:49,671 PID, Interaction Style, Mode, Event-type, ID, Alive?, Center
+2020-02-21 11:50:32,781 PID, Interaction Style, Mode, Event-type, ID, Alive?, Center
+2020-02-21 11:52:24,814 PID, Interaction Style, Mode, Event-type, ID, Alive?, Center
+2020-02-21 11:53:05,851 PID, Interaction Style, Mode, Event-type, ID, Alive?, Center
+2020-02-21 11:53:23,762 PID, Interaction Style, Mode, Event-type, ID, Alive?, Center
+2020-02-21 11:54:00,863 PID, Interaction Style, Mode, Event-type, ID, Alive?, Center
+2020-02-21 11:54:11,016 test
