@@ -192,7 +192,7 @@ def death_drag(lock_list):
 
 def start_servers(event_source):
     # Bottle Server
-    bottle = LogBottle(event_source)
+    bottle = LogBottle()
     bottle.start()
     # threading.Thread(target=bottle.run).start()
 
