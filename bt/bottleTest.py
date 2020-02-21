@@ -13,7 +13,7 @@ class LogBottle(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
         self.app = Bottle()
-        self.host = 'localhost'
+        self.host = '132.199.132.227'
         self.port = 3030
 
     @staticmethod
@@ -26,4 +26,3 @@ class LogBottle(threading.Thread):
 
     def run(self):
         run(server='waitress', host=self.host, port=self.port)
-        # IP: curl ipconfig.me

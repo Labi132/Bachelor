@@ -94,8 +94,6 @@ logging.basicConfig(filename='log.txt', format='%(asctime)s %(message)s',
                     level=logging.INFO)
 
 
-# Stacking oder kleinere kacheln, dateiname, programmatisches ende
-
 def create_tangibles(tangl):
     for key in tangibles:
         new_tang = Tangible([], key)
@@ -108,7 +106,6 @@ def create_images(imgl, dragl):
     position_list = list(positions)
     random.shuffle(image_list)
     k = 0
-
     for x in image_list:
         new_image = Images(x, screens[5])
         new_image.set_center(position_list[k][0], position_list[k][1])
