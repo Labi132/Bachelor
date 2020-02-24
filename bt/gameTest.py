@@ -258,7 +258,7 @@ def tangible_alive(tang, event, mode):
 
 
 # define a main function
-def main():1
+def main():
     global PID
     PID = input("Bitte geben Sie Ihre ID ein: ")
     pos_list = list(positions)
@@ -366,18 +366,11 @@ def main():1
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
+                    log(tang[DRAG], pygame.QUIT, mode)
                     running = False
                     server.shutdown()
                     pygame.quit()
                     sys.exit()
-
-            #TODO: Implement single tangible variant
-            if event.type == TANGIBLESWITCH:
-                pygame.quit()
-                sys.exit()
-                log(tang[event.who.get_class_id()], event.type, mode)
-                mode = event.mode
-                log(tang[event.who.get_class_id()], event.type, mode)
 
             if event.type == TANGIBLEMOVE:
                 # move tangibles into folders
