@@ -15,7 +15,7 @@ from parsers.MessageTypes import MessageTypes
 
 from EventFire import EventFire
 
-from bottleTest import LogBottle
+# from bottleTest import LogBottle
 
 from views.images import Images, ImageList, ImageFolder
 from views.tangible import Tangible, Circle
@@ -189,14 +189,19 @@ def death_drag(lock_list):
 
 def start_servers(event_source):
     # Bottle Server
+
+    """
+    removing bottle server since its unused in multi tangible setting currently
+
     bottle = LogBottle()
     bottle.start()
+    """
+
     # threading.Thread(target=bottle.run).start()
 
     # Aus Jürgens Code
     mp = MessageParser(event_source)
 
-    print("JÜRGENS SERVER HIER")
     parser = argparse.ArgumentParser()
     parser.add_argument("--ip", default="127.0.0.1", help="The ip to listen on")
     parser.add_argument("--port", type=int, default=3333,
@@ -253,7 +258,9 @@ def tangible_alive(tang, event, mode):
 
 
 # define a main function
-def main():
+def main():1
+    global PID
+    PID = input("Bitte geben Sie Ihre ID ein: ")
     pos_list = list(positions)
     pos_list.sort()
 

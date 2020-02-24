@@ -124,3 +124,4 @@
 2020-02-21 13:26:00,327 None, Multiple, None, Movement, 2, True, (1533, 874)
 2020-02-21 13:26:00,377 None, Multiple, None, Movement, 2, True, (1533, 874)
 2020-02-21 13:26:00,378 None, Multiple, None, Death, 2, False, (1530, 876)
+2020-02-24 13:17:37,671 PID, Interaction Style, Mode, Event-type, ID, Alive?, Center
