@@ -32,6 +32,7 @@ ZOOM = 4
 TANGIBLEMOVE = pygame.USEREVENT + 1  # custom events für tangible aktionen
 TANGIBLEDEATH = pygame.USEREVENT + 2
 TANGIBLESWITCH = pygame.USEREVENT + 3
+FINISH = pygame.USEREVENT + 4
 
 images = {('views/Bilder/city/1850-31663-22486.jpg', 'city'),
           ('views/Bilder/city/16698-19509-21439.jpg', 'city'),
@@ -83,7 +84,7 @@ folders_invers = {'city': 0, 'vacation': 1, 'pet': 2, 'food': 3, 'screen': 4,
 screens = {0: 'city', 1: 'vacation', 2: 'pet', 3: 'food',
            4: 'screen', 5: 'main'}
 
-events = {12: "Quit", 25: "Movement", 26: "Death", 27: "Switch"}
+events = {12: "Quit", 25: "Movement", 26: "Death", 27: "Switch", 28: "Finished"}
 
 image_counts = {'screen': 3, 'city': 3, 'vacation': 7, 'pet': 7, 'food': 7}
 
@@ -149,7 +150,7 @@ def check_ending(imgl):
     for x in imgl:
         if not x.get_correct():
             return False
-    my_event = pygame.event.Event(pygame.QUIT)
+    my_event = pygame.event.Event(FINISH)
     pygame.event.post(my_event)
 
 
@@ -247,14 +248,17 @@ def img_folder_collision(collisions_img_folders, image_counter, current_screen):
                 x.update(current_screen)
 
 
-def tangible_alive(tang, event, mode):
-    tang.set_alive(True)
-    log(tang, event.type, mode)
-    tang.set_center(event.who.get_bounds_component().get_position())
+def tangible_alive(tangible, event, mode):
+    tangible.set_alive(True)
+    log(tangible, event.type, mode)
+    tangible.set_center(event.who.get_bounds_component().get_position())
 
 
 # define a main function
 def main():
+    global PID
+    PID = input("Bitte geben Sie Ihre ID ein: ")
+
     pos_list = list(positions)
     pos_list.sort()
 
@@ -312,6 +316,7 @@ def main():
 
     folder_once = False
 
+    # start at main screen
     current_screen = screens[5]
 
     create_folders(folder_list, dragable_list, pos_list)
@@ -327,7 +332,8 @@ def main():
     while running:
         # event handling, gets all event from the event queue
         # Collision
-        # TODO: Zoom ordner?, bug beim groupen im gleichen ordner reproduzeiren und fixen, list-Error beim ordnerwechsel fixen
+        # TODO: Zoom ordner?, bug beim groupen im gleichen ordner reproduzeiren und fixen,
+        #  list-Error beim ordnerwechsel fixen
         collisions_tangibles = pygame.sprite.spritecollide(tang[SINGLE],
                                                            dragable_list,
                                                            False)
@@ -344,7 +350,7 @@ def main():
         check_ending(image_list)
 
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.FINISH:
                 running = False
                 server.shutdown()
                 pygame.quit()
@@ -352,15 +358,13 @@ def main():
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
+                    log(tangibles[0], pygame.QUIT, mode)
                     running = False
                     server.shutdown()
                     pygame.quit()
                     sys.exit()
 
-            #TODO: Implement single tangible variant
             if event.type == TANGIBLESWITCH:
-                pygame.quit()
-                sys.exit()
                 log(tang[SINGLE], event.type, mode)
                 mode = event.mode
                 log(tang[SINGLE], event.type, mode)
