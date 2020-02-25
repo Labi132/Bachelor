@@ -15,14 +15,14 @@ from parsers.MessageTypes import MessageTypes
 
 from EventFire import EventFire
 
-# from bottleTest import LogBottle
+from bottleTest import LogBottle
 
 from views.images import Images, ImageList, ImageFolder
 from views.tangible import Tangible
 
 white = [255, 255, 255]
 
-
+SINGLE = 0
 CITY = 0
 FOOD = 1
 PET = 2
@@ -73,7 +73,7 @@ positions = {
     (1600, 100), (1600, 350), (1600, 600),
     (1850, 100), (1850, 350), (1850, 600)}
 
-tangibles = {CITY: 0, FOOD: 1, PET: 2, SCREENSHOT: 3, VACATION: 4, ENTER: 5 }
+tangibles = {SINGLE: 0}
 
 tang = {}
 
@@ -175,7 +175,6 @@ def log(tangible, eventtype, mode):
     # "PID: " + str(PID) + ", "
     message += str(INTERACTION) + ", "
     # "Interaction Style: " + str(INTERACTION) + ", "
-    """if INTERACTION == "Multiple":"""
     message += str(mode) + ", "
     # "Mode: " + str(MODE) + ", "
     message += str(events[eventtype]) + ", "
@@ -191,13 +190,8 @@ def log(tangible, eventtype, mode):
 
 def start_servers(event_source):
     # Bottle Server
-
-    """
-    removing bottle server since its unused in multi tangible setting currently
-
     bottle = LogBottle()
     bottle.start()
-    """
 
     # threading.Thread(target=bottle.run).start()
 
@@ -236,16 +230,15 @@ def img_folder_collision(collisions_img_folders, current_screen, new_screen):
             x = collisions_img_folders[i]
             global image_counter
             if x.get_active():
-                prev = x.get_screen()
-                if x.get_screen() == folders[i].get_tag():
-                    if prev != screens[5]:
-                        y = folders_invers[prev]
-                        folders[y].remove_item(x)
+                current_img_screen = x.get_screen()
+                if current_img_screen == new_screen:
+                    y = folders_invers[current_img_screen]
+                    folders[y].remove_item(x)
                     x.change_screen(screens[5])
                     image_counter += 1
                 else:
-                    if prev != screens[5]:
-                        y = folders_invers[prev]
+                    if current_img_screen != screens[5]:
+                        y = folders_invers[current_img_screen]
                         folders[y].remove_item(x)
                     else:
                         image_counter -= 1
@@ -272,7 +265,7 @@ def main():
     testlog = "Time, PID, Interaction Style, Mode, Event-type, ID, Alive?, Center"
     logging.info(testlog)
 
-    mode = None
+    mode = CITY
 
     # Event Source for Servers
     event_source = EventFire()
@@ -313,8 +306,6 @@ def main():
     create_folders(folder_list, dragable_list, pos_list)
     reset_folder_position()
 
-    collisions_tangibles = [None, None, None, None, None, None]
-
     # define a variable to control the main loop
     running = True
 
@@ -322,14 +313,10 @@ def main():
     while running:
         # event handling, gets all event from the event queue
         # Collision
-        # TODO: Zoom ordner?, bug beim groupen im gleichen ordner reproduzeiren
-        #  und fixen, list-Error beim ordnerwechsel fixen
-        for x in tang.keys():
-            collisions_tangibles[x] = pygame.sprite.spritecollide(tang[x],
-                                                                  image_list,
-                                                                  False)
+        collisions_tangibles = pygame.sprite.spritecollide(tang[SINGLE],
+                                                           dragable_list, False)
 
-        collisions_open_folders = pygame.sprite.spritecollide(tang[ENTER],
+        collisions_open_folders = pygame.sprite.spritecollide(tang[SINGLE],
                                                               folder_list,
                                                               False)
 
@@ -351,54 +338,59 @@ def main():
                     pygame.quit()
                     sys.exit()
 
-            if event.type == TANGIBLEMOVE:
-                print(event.who.get_class_id())
+            if event.type == TANGIBLESWITCH:
+                log(tang[SINGLE], event.type, mode)
+                mode = event.mode
+                log(tang[SINGLE], event.type, mode)
 
+            if event.type == TANGIBLEMOVE:
                 # Enter
-                if event.who.get_class_id() == ENTER:
+                if mode == ENTER:
                     once_enter = False
-                    tangible_alive(tang[ENTER], event, mode)
+                    tangible_alive(tang[SINGLE], event, mode)
                     if collisions_open_folders and not folder_once:
                         if current_screen == collisions_open_folders[0].get_tag():
                             current_screen = screens[5]
-                            image_list.update(current_screen)
+
                             reset_image_positions(image_list, pos_list)
                             reset_folder_position()
                         else:
                             current_screen = collisions_open_folders[
                                 0].get_tag()
+
                             collisions_open_folders[0].reset_positions()
                             reset_folder_position()
+                        image_list.update(current_screen)
                         folder_once = True
 
                 # City
-                if event.who.get_class_id() == CITY:
-                    tangible_alive(tang[CITY], event, mode)
-                    img_folder_collision(collisions_tangibles[CITY],
+                if mode == CITY:
+                    tangible_alive(tang[SINGLE], event, mode)
+                    img_folder_collision(collisions_tangibles,
                                          current_screen, screens[CITY])
 
                 # Screenshot
                 if event.who.get_class_id() == SCREENSHOT:
-                    tangible_alive(tang[SCREENSHOT], event, mode)
-                    img_folder_collision(collisions_tangibles[SCREENSHOT],
+                    tangible_alive(tang[SINGLE], event, mode)
+                    img_folder_collision(collisions_tangibles,
                                          current_screen, screens[SCREENSHOT])
 
                 # Food
                 if event.who.get_class_id() == FOOD:
-                    tangible_alive(tang[FOOD], event, mode)
-                    img_folder_collision(collisions_tangibles[FOOD],
+                    tangible_alive(tang[SINGLE], event, mode)
+                    img_folder_collision(collisions_tangibles,
                                          current_screen, screens[FOOD])
 
                 # Pet
                 if event.who.get_class_id() == PET:
-                    tangible_alive(tang[PET], event, mode)
-                    img_folder_collision(collisions_tangibles[PET],
+                    tangible_alive(tang[SINGLE], event, mode)
+                    img_folder_collision(collisions_tangibles,
                                          current_screen, screens[PET])
 
                 # Vacation
                 if event.who.get_class_id() == VACATION:
-                    tangible_alive(tang[VACATION], event, mode)
-                    img_folder_collision(collisions_tangibles[VACATION],
+                    tangible_alive(tang[SINGLE], event, mode)
+                    img_folder_collision(collisions_tangibles,
                                          current_screen, screens[VACATION])
 
             if event.type == TANGIBLEDEATH:
@@ -407,11 +399,9 @@ def main():
                 log(tang[tangible_id], event.type, mode)
 
 
-        if not tang[ENTER].get_alive() and time.perf_counter() - \
+        if not tang[SINGLE].get_alive() and time.perf_counter() - \
                 timer_enter > timer_delay:
-            collisions_tangibles[ENTER] = []
             if not once_enter:
-                tang[ENTER].set_center((-500, -500))
                 once_enter = True
                 folder_once = False
 
