@@ -7,24 +7,15 @@ red = [255, 0, 0]
 class Tangible(pygame.sprite.Sprite):
     offset = -50
 
-    def __init__(self, bounds, id):
+    def __init__(self, new_id):
         pygame.sprite.Sprite.__init__(self)
-        self.id = id
-
-        if bounds != []:
-            self.image = pygame.Surface((bounds.width, bounds.height))
-            self.image.fill(white)
-            self.rect = self.image.get_rect()
-            self.rect.center = (bounds.get_position())
-            self.lockable = False
-            self.alive = True
-        else:
-            self.image = pygame.Surface((90, 90))
-            self.image.fill(white)
-            self.rect = self.image.get_rect()
-            self.rect.center = (-500, -500)
-            self.lockable = False
-            self.alive = False
+        self.id = new_id
+        self.image = pygame.Surface((90, 90))
+        self.image.fill(white)
+        self.rect = self.image.get_rect()
+        self.rect.center = (-500, -500)
+        self.lockable = False
+        self.alive = False
 
     def set_center(self, coords):
         self.rect.center = (coords[0], coords[1])
@@ -55,20 +46,3 @@ class Tangible(pygame.sprite.Sprite):
 
     def get_alive(self):
         return self.alive
-
-
-class Circle:
-    def __init__(self):
-        self.x = -500
-        self.y = -500
-        self.radius = 200
-        self.color = [0, 0, 255]
-
-    def set_center(self, new_coords):
-        self.x, self.y = new_coords
-
-    def get_center(self):
-        return (self.x, self.y)
-
-    def draw(self, screen):
-        pygame.draw.circle(screen, self.color, (self.x, self.y), self.radius, 5)
