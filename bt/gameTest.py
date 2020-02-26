@@ -31,6 +31,7 @@ ZOOM = 4
 TANGIBLEMOVE = pygame.USEREVENT + 1  # custom events für tangible aktionen
 TANGIBLEDEATH = pygame.USEREVENT + 2
 TANGIBLESWITCH = pygame.USEREVENT + 3
+FINISH = pygame.USEREVENT + 4
 
 images = {('views/Bilder/city/1850-31663-22486.jpg', 'city'),
           ('views/Bilder/city/16698-19509-21439.jpg', 'city'),
@@ -82,7 +83,7 @@ folders_invers = {'city': 0, 'vacation': 1, 'pet': 2, 'food': 3, 'screen': 4,
 screens = {0: 'city', 1: 'vacation', 2: 'pet', 3: 'food',
            4: 'screen', 5: 'main'}
 
-events = {12: "Quit", 25: "Movement", 26: "Death", 27: "Switch"}
+events = {12: "Quit", 25: "Movement", 26: "Death", 27: "Switch", 28: "Finish"}
 
 image_counts = {'screen': 3, 'city': 3, 'vacation': 7, 'pet': 7, 'food': 7}
 
@@ -358,7 +359,8 @@ def main():
         check_ending(image_list)
 
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == FINISH:
+                log(tang[DRAG], event.type, mode)
                 running = False
                 server.shutdown()
                 pygame.quit()
