@@ -1,8 +1,8 @@
 #include <WiFi.h>
 #include <M5Stack.h>
 
-const char* ssid     = "AndroidAP";
-const char* password = "zstp2194";
+const char* ssid     = "WIN-GCII0CKRUO7 0159";
+const char* password = "Q5-9k195";
 
 const char* host = "132.199.132.227";
 
@@ -34,6 +34,10 @@ void setup()
     
     
     M5.Lcd.setBrightness(255);
+    M5.Lcd.setTextWrap(true, true);
+    M5.Lcd.setTextSize(3);
+    M5.Lcd.setTextDatum(MC_DATUM);
+    M5.Lcd.drawString("Stadt/City", 160, 120, 2);
 }
 
 String mode[6] = {"CITY", "FOOD", "PET", "SCREENSHOT", "VACATION", "ENTER"};
@@ -67,18 +71,6 @@ void loop()
             }
         }
 
-        M5.Lcd.setTextWrap(true, true);
-        M5.Lcd.setTextSize(3);
-        M5.Lcd.setTextDatum(MC_DATUM);
-        switch(current_mode){
-          case 0: M5.Lcd.drawString("Stadt/City", 160, 120, 2); break;
-          case 1: M5.Lcd.drawString("Essen/Food", 160, 120, 2); break;
-          case 2: M5.Lcd.drawString("Haustier/Pet", 160, 120, 2); break;
-          case 3: M5.Lcd.drawString("Screenshot", 160, 120, 2); break;
-          case 4: M5.Lcd.drawString("Urlaub/Vacation", 160, 120, 2); break;
-          case 5: M5.Lcd.drawString("Ordner öffnen", 160, 120, 2); break;
-          default: break;
-        }
 
     // Use WiFiClient class to create TCP connections
     WiFiClient client;
@@ -89,6 +81,16 @@ void loop()
     }
 
     if (mode_changed == true){
+
+      switch(current_mode){
+          case 0: M5.Lcd.clear(); M5.Lcd.drawString("Stadt/City", 160, 120, 2); break;
+          case 1: M5.Lcd.clear(); M5.Lcd.drawString("Essen/Food", 160, 120, 2); break;
+          case 2: M5.Lcd.clear(); M5.Lcd.drawString("Haustier/Pet", 160, 120, 2); break;
+          case 3: M5.Lcd.clear(); M5.Lcd.drawString("Screenshot", 160, 120, 2); break;
+          case 4: M5.Lcd.clear(); M5.Lcd.drawString("Urlaub/Vacation", 160, 120, 2); break;
+          case 5: M5.Lcd.clear(); M5.Lcd.drawString("Ordner öffnen", 160, 120, 2); break;
+          default: break;
+        }  
           // We now create a URI for the request
     String url = "/log/";
     url += mode[current_mode];
@@ -97,13 +99,15 @@ void loop()
     client.print(String("GET ") + url + " HTTP/1.1\r\n" +
                  "Host: " + host + "\r\n" +
                  "Connection: close\r\n\r\n");
-    unsigned long timeout = millis();
+    mode_changed = false;
+    client.stop();             
+    /* unsigned long timeout = millis();
     while (client.available() == 0) {
         if (millis() - timeout > 5000) {
             Serial.println(">>> Client Timeout !");
             client.stop();
             return;
          }
-       }
+       }*/
     }    
 }
