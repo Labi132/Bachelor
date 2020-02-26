@@ -66,14 +66,17 @@ void loop()
                 mode_changed = true;
             }
         }
-        
+
+        M5.Lcd.setTextWrap(true, true);
+        M5.Lcd.setTextSize(3);
+        M5.Lcd.setTextDatum(MC_DATUM);
         switch(current_mode){
-          case 0: M5.Lcd.drawString("Stadt/City", (int)(M5.Lcd.width()/2), (int)(M5.Lcd.height()/2), 2); break;
-          case 1: M5.Lcd.drawString("Essen/Food", (int)(M5.Lcd.width()/2), (int)(M5.Lcd.height()/2), 2); break;
-          case 2: M5.Lcd.drawString("Haustier/Pet", (int)(M5.Lcd.width()/2), (int)(M5.Lcd.height()/2), 2); break;
-          case 3: M5.Lcd.drawString("Screenshot", (int)(M5.Lcd.width()/2), (int)(M5.Lcd.height()/2), 2); break;
-          case 4: M5.Lcd.drawString("Urlaub/Vacation", (int)(M5.Lcd.width()/2), (int)(M5.Lcd.height()/2), 2); break;
-          case 5: M5.Lcd.drawString("Ordner öffnen", (int)(M5.Lcd.width()/2), (int)(M5.Lcd.height()/2), 2); break;
+          case 0: M5.Lcd.drawString("Stadt/City", 160, 120, 2); break;
+          case 1: M5.Lcd.drawString("Essen/Food", 160, 120, 2); break;
+          case 2: M5.Lcd.drawString("Haustier/Pet", 160, 120, 2); break;
+          case 3: M5.Lcd.drawString("Screenshot", 160, 120, 2); break;
+          case 4: M5.Lcd.drawString("Urlaub/Vacation", 160, 120, 2); break;
+          case 5: M5.Lcd.drawString("Ordner öffnen", 160, 120, 2); break;
           default: break;
         }
 
