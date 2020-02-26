@@ -149,7 +149,7 @@ def check_ending(imgl):
     for x in imgl:
         if not x.get_correct():
             return False
-    my_event = pygame.event.Event(pygame.QUIT)
+    my_event = pygame.event.Event(FINISH)
     pygame.event.post(my_event)
 
 
