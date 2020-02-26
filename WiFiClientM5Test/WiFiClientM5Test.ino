@@ -34,6 +34,7 @@ void setup()
     
     
     M5.Lcd.setBrightness(255);
+    M5.Lcd.drawJpgFile(SD, "/drag.jpg", 0, 0, 320, 240);
 }
 
 String mode[5] = {"HIGHLIGHT", "DRAG", "GROUP", "PAN", "ZOOM"};
