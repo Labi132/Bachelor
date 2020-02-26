@@ -17,7 +17,7 @@ class LogBottle(threading.Thread):
         self.port = 3030
 
     @staticmethod
-    @get('/log/<content>')  # or @route('/login')
+    @get('/log/<content>')
     def log(content):
         my_event = pygame.event.Event(pygame.USEREVENT + 3, mode=content)
         pygame.event.post(my_event)

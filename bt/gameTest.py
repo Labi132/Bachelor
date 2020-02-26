@@ -79,7 +79,11 @@ tang = {}
 
 folders = {}
 
-modes = {CITY: "City", FOOD: "Food", PET: "Pet", SCREENSHOT: "Screenshot", VACATION: "Vacation", ENTER: "Enter"}
+modes = {"CITY": CITY, "FOOD": FOOD, "PET": PET, "SCREENSHOT": SCREENSHOT,
+         "VACATION": VACATION, "ENTER": ENTER}
+
+modes_logging = {CITY: "City", FOOD: "Food", PET: "Pet",
+                SCREENSHOT: "Screenshot", VACATION: "Vacation", ENTER: "Enter"}
 
 # TANGIBLES, FOLDERS_INVERS UND SCREENS SIND IN DER REIHENFOLGE IDENTISCH
 # AUFGRUND FOLGENDER AUFRUFE.
@@ -177,7 +181,7 @@ def log(tangible, eventtype, mode):
     # "PID: " + str(PID) + ", "
     message += str(INTERACTION) + ", "
     # "Interaction Style: " + str(INTERACTION) + ", "
-    message += str(modes[mode]) + ", "
+    message += str(modes_logging[mode]) + ", "
     # "Mode: " + str(MODE) + ", "
     message += str(events[eventtype]) + ", "
     # "Eventtype: " + str(events[eventtype]) + ", "
@@ -315,8 +319,7 @@ def main():
     while running:
         # event handling, gets all event from the event queue
         # Collision
-        collisions_tangibles = pygame.sprite.spritecollide(tang[SINGLE],
-                                                           dragable_list, False)
+        collisions_tangibles = []
 
         collisions_open_folders = pygame.sprite.spritecollide(tang[SINGLE],
                                                               folder_list,
@@ -326,20 +329,15 @@ def main():
 
         for event in pygame.event.get():
             if event.type == FINISH:
-                log(tang[CITY], event.type, mode)
+                log(tang[SINGLE], event.type, mode)
                 running = False
                 server.shutdown()
                 pygame.quit()
                 sys.exit()
 
-            if event.type == TANGIBLESWITCH:
-                log(tang[SINGLE], event.type, mode)
-                mode = event.mode
-                log(tang[SINGLE, event.type, mode])
-
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    log(tang[CITY], pygame.QUIT, mode)
+                    log(tang[SINGLE], pygame.QUIT, mode)
                     running = False
                     server.shutdown()
                     pygame.quit()
@@ -347,24 +345,25 @@ def main():
 
             if event.type == TANGIBLESWITCH:
                 log(tang[SINGLE], event.type, mode)
-                mode = event.mode
+                mode = modes[event.mode]
+                print(mode)
                 log(tang[SINGLE], event.type, mode)
 
             if event.type == TANGIBLEMOVE:
-                # Enter
+                tangible_alive(tang[SINGLE], event, mode)
+                collisions_tangibles = pygame.sprite.spritecollide(tang[SINGLE],
+                                                                   dragable_list,
+                                                                   False)
                 if mode == ENTER:
                     once_enter = False
-                    tangible_alive(tang[SINGLE], event, mode)
                     if collisions_open_folders and not folder_once:
                         if current_screen == collisions_open_folders[0].get_tag():
                             current_screen = screens[5]
-
                             reset_image_positions(image_list, pos_list)
                             reset_folder_position()
                         else:
                             current_screen = collisions_open_folders[
                                 0].get_tag()
-
                             collisions_open_folders[0].reset_positions()
                             reset_folder_position()
                         image_list.update(current_screen)
@@ -372,38 +371,34 @@ def main():
 
                 # City
                 if mode == CITY:
-                    tangible_alive(tang[SINGLE], event, mode)
                     img_folder_collision(collisions_tangibles,
                                          current_screen, screens[CITY])
 
                 # Screenshot
-                if event.who.get_class_id() == SCREENSHOT:
-                    tangible_alive(tang[SINGLE], event, mode)
+                if mode == SCREENSHOT:
                     img_folder_collision(collisions_tangibles,
                                          current_screen, screens[SCREENSHOT])
 
                 # Food
-                if event.who.get_class_id() == FOOD:
-                    tangible_alive(tang[SINGLE], event, mode)
+                if mode == FOOD:
                     img_folder_collision(collisions_tangibles,
                                          current_screen, screens[FOOD])
 
                 # Pet
-                if event.who.get_class_id() == PET:
-                    tangible_alive(tang[SINGLE], event, mode)
+                if mode == PET:
                     img_folder_collision(collisions_tangibles,
                                          current_screen, screens[PET])
 
                 # Vacation
-                if event.who.get_class_id() == VACATION:
-                    tangible_alive(tang[SINGLE], event, mode)
+                if mode == VACATION:
                     img_folder_collision(collisions_tangibles,
                                          current_screen, screens[VACATION])
 
             if event.type == TANGIBLEDEATH:
-                tangible_id = event.who.get_class_id()
-                tang[tangible_id].set_alive(False)
-                log(tang[tangible_id], event.type, mode)
+                collisions_tangibles = []
+                tang[SINGLE].set_center((-500, -500))
+                tang[SINGLE].set_alive(False)
+                log(tang[SINGLE], event.type, mode)
 
 
         if not tang[SINGLE].get_alive() and time.perf_counter() - \
