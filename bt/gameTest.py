@@ -352,7 +352,7 @@ def main():
         check_ending(image_list)
 
         for event in pygame.event.get():
-            if event.type == pygame.FINISH:
+            if event.type == FINISH:
                 log(tang[SINGLE], event.type, mode)
                 running = False
                 server.shutdown()
@@ -369,7 +369,7 @@ def main():
 
             if event.type == TANGIBLESWITCH:
                 log(tang[SINGLE], event.type, mode)
-                mode = event.mode
+                mode = modes[event.mode]
                 log(tang[SINGLE], event.type, mode)
 
             if event.type == TANGIBLEMOVE:
@@ -532,7 +532,7 @@ def main():
         image_list.draw(screen, current_screen)
         if zoomed_img is not None:
             zoomed_img.draw_unscaled(screen, align_right, current_screen)
-        if tang[SINGLE].get_alive():
+        if tang[SINGLE].get_alive() and mode == PAN:
             pan_circle.draw(screen)
         pygame.display.flip()
         clock.tick(30)
