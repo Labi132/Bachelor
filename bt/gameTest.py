@@ -351,6 +351,7 @@ def main():
 
         for event in pygame.event.get():
             if event.type == pygame.FINISH:
+                log(tang[SINGLE], event.type, mode)
                 running = False
                 server.shutdown()
                 pygame.quit()
@@ -358,7 +359,7 @@ def main():
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    log(tangibles[0], pygame.QUIT, mode)
+                    log(tang[SINGLE], pygame.QUIT, mode)
                     running = False
                     server.shutdown()
                     pygame.quit()
