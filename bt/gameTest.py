@@ -78,6 +78,10 @@ tang = {}
 
 folders = {}
 
+modes = {"HIGHLIGHT": HIGHLIGHT, "DRAG": DRAG, "GROUP": GROUP, "PAN": PAN, "ZOOM": ZOOM}
+
+modes_logging = {HIGHLIGHT: "Highlight", DRAG: "Drag", GROUP: "Group", PAN: "Pan", ZOOM: "Zoom"}
+
 folders_invers = {'city': 0, 'vacation': 1, 'pet': 2, 'food': 3, 'screen': 4,
                   'main': 5}
 
@@ -169,7 +173,7 @@ def log(tangible, eventtype, mode):
     message += str(INTERACTION) + ", "
     # "Interaction Style: " + str(INTERACTION) + ", "
     """if INTERACTION == "Multiple":"""
-    message += str(mode) + ", "
+    message += str(modes_logging[mode]) + ", "
     # "Mode: " + str(MODE) + ", "
     message += str(events[eventtype]) + ", "
     # "Eventtype: " + str(events[eventtype]) + ", "
@@ -334,9 +338,7 @@ def main():
         # Collision
         # TODO: Zoom ordner?, bug beim groupen im gleichen ordner reproduzeiren und fixen,
         #  list-Error beim ordnerwechsel fixen
-        collisions_tangibles = pygame.sprite.spritecollide(tang[SINGLE],
-                                                           dragable_list,
-                                                           False)
+        collisions_tangibles = []
 
         for x in folders.keys():
             collisions_img_folders[x] = pygame.sprite.spritecollide(folders[x],
@@ -371,6 +373,11 @@ def main():
                 log(tang[SINGLE], event.type, mode)
 
             if event.type == TANGIBLEMOVE:
+
+                collisions_tangibles = pygame.sprite.spritecollide(tang[SINGLE],
+                                                                   dragable_list,
+                                                                   False)
+
                 # move tangibles into folders
                 if not (tang[SINGLE].get_alive() and mode == PAN):
                     img_folder_collision(collisions_img_folders, image_counter,
@@ -380,8 +387,7 @@ def main():
                 if mode == DRAG:
                     if not (tang[SINGLE].get_alive() and mode == DRAG):
                         collisions_tangibles = []
-                        tang[SINGLE].set_center(
-                            event.who.get_bounds_component().get_position())
+                        tang[SINGLE].set_center(event.who.get_bounds_component().get_position())
                         tang[SINGLE].set_lockable(True)
 
                     move_pos = tang[SINGLE].get_center()
@@ -407,7 +413,7 @@ def main():
                         except TypeError:
                             pass
 
-                # Highlight TODO: TESTEN OB RESETTEN DER FOLDER BESSER ANKOMMT ALS NICHT RESETTEN
+                # Highlight
                 if mode == HIGHLIGHT:
                     once_highlight = False
                     tangible_alive(tang[SINGLE], event, mode)
@@ -490,6 +496,7 @@ def main():
                         offset_changed = True
 
             if event.type == TANGIBLEDEATH:
+                tang[SINGLE].set_center((-500, -500))
                 tang[SINGLE].set_alive(False)
                 log(tang[SINGLE], event.type, mode)
                 zoomed_img = None

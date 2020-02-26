@@ -1,8 +1,8 @@
 #include <WiFi.h>
 #include <M5Stack.h>
 
-const char* ssid     = "AndroidAP";
-const char* password = "zstp2194";
+const char* ssid     = "WIN-GCII0CKRUO7 0159";
+const char* password = "Q5-9k195";
 
 const char* host = "132.199.132.227";
 
@@ -67,14 +67,7 @@ void loop()
             }
         }
         
-        switch(current_mode){
-          case 0: M5.Lcd.drawJpgFile(SD, "/highlight.jpg", 0, 0, 320, 240); break;
-          case 1: M5.Lcd.drawJpgFile(SD, "/drag.jpg", 0, 0, 320, 240); break;
-          case 2: M5.Lcd.drawJpgFile(SD, "/group.jpg", 0, 0, 320, 240); break;
-          case 3: M5.Lcd.drawJpgFile(SD, "/pan.jpg", 0, 0, 320, 240); break;
-          case 4: M5.Lcd.drawJpgFile(SD, "/zoom.jpg", 0, 0, 320, 240); break;
-          default: break;
-        }
+
 
     // Use WiFiClient class to create TCP connections
     WiFiClient client;
@@ -85,6 +78,15 @@ void loop()
     }
 
     if (mode_changed == true){
+
+            switch(current_mode){
+          case 0: M5.Lcd.clear(); M5.Lcd.drawJpgFile(SD, "/highlight.jpg", 0, 0, 320, 240); break;
+          case 1: M5.Lcd.clear(); M5.Lcd.drawJpgFile(SD, "/drag.jpg", 0, 0, 320, 240); break;
+          case 2: M5.Lcd.clear(); M5.Lcd.drawJpgFile(SD, "/group.jpg", 0, 0, 320, 240); break;
+          case 3: M5.Lcd.clear(); M5.Lcd.drawJpgFile(SD, "/pan.jpg", 0, 0, 320, 240); break;
+          case 4: M5.Lcd.clear(); M5.Lcd.drawJpgFile(SD, "/zoom.jpg", 0, 0, 320, 240); break;
+          default: break;
+        }  
           // We now create a URI for the request
     String url = "/log/";
     url += mode[current_mode];
@@ -93,13 +95,6 @@ void loop()
     client.print(String("GET ") + url + " HTTP/1.1\r\n" +
                  "Host: " + host + "\r\n" +
                  "Connection: close\r\n\r\n");
-    unsigned long timeout = millis();
-    while (client.available() == 0) {
-        if (millis() - timeout > 5000) {
-            Serial.println(">>> Client Timeout !");
-            client.stop();
-            return;
-         }
-       }
+    mode_changed = false;
     }    
 }
