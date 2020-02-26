@@ -79,6 +79,8 @@ tang = {}
 
 folders = {}
 
+modes = {CITY: "City", FOOD: "Food", PET: "Pet", SCREENSHOT: "Screenshot", VACATION: "Vacation", ENTER: "Enter"}
+
 # TANGIBLES, FOLDERS_INVERS UND SCREENS SIND IN DER REIHENFOLGE IDENTISCH
 # AUFGRUND FOLGENDER AUFRUFE.
 # TODO: UMGEHEN
@@ -176,7 +178,7 @@ def log(tangible, eventtype, mode):
     message += str(INTERACTION) + ", "
     # "Interaction Style: " + str(INTERACTION) + ", "
     """if INTERACTION == "Multiple":"""
-    message += str(mode) + ", "
+    message += str(modes[mode]) + ", "
     # "Mode: " + str(MODE) + ", "
     message += str(events[eventtype]) + ", "
     # "Eventtype: " + str(events[eventtype]) + ", "
@@ -264,15 +266,15 @@ def tangible_alive(tangible, event, mode):
 def main():
     # TODO: WIEDER EINBAUEN
 
-    # global PID
-    # PID = input("Bitte geben Sie Ihre ID ein: ")
+    global PID
+    PID = input("Bitte geben Sie Ihre ID ein: ")
     pos_list = list(positions)
     pos_list.sort()
 
     testlog = "Time, PID, Interaction Style, Mode, Event-type, ID, Alive?, Center"
     logging.info(testlog)
 
-    mode = None
+    mode = CITY
 
     # Event Source for Servers
     event_source = EventFire()
@@ -342,6 +344,11 @@ def main():
                 server.shutdown()
                 pygame.quit()
                 sys.exit()
+
+            if event.type == TANGIBLESWITCH:
+                log(tang[SINGLE], event.type, mode)
+                mode = event.mode
+                log(tang[SINGLE, event.type, mode])
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
