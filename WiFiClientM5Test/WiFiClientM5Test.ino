@@ -1,11 +1,3 @@
-/*
- *  This sketch sends data via HTTP GET requests to data.sparkfun.com service.
- *
- *  You need to get streamId and privateKey at data.sparkfun.com and paste them
- *  below. Or just customize this script to talk to other HTTP servers.
- *
- */
-
 #include <WiFi.h>
 #include <M5Stack.h>
 
@@ -84,10 +76,6 @@ void loop()
           default: break;
         }
 
-    
-    Serial.print("connecting to ");
-    Serial.println(host);
-
     // Use WiFiClient class to create TCP connections
     WiFiClient client;
     const int httpPort = 3030;
@@ -100,9 +88,6 @@ void loop()
           // We now create a URI for the request
     String url = "/log/";
     url += mode[current_mode];
-
-    Serial.print("Requesting URL: ");
-    Serial.println(url);
     
     // This will send the request to the server
     client.print(String("GET ") + url + " HTTP/1.1\r\n" +
@@ -116,8 +101,5 @@ void loop()
             return;
          }
        }
-    }
-    Serial.println();
-    Serial.println("closing connection");
-    
+    }    
 }
