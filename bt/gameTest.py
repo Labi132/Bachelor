@@ -84,7 +84,7 @@ folders_invers = {'city': 0, 'vacation': 1, 'pet': 2, 'food': 3, 'screen': 4,
 screens = {0: 'city', 1: 'vacation', 2: 'pet', 3: 'food',
            4: 'screen', 5: 'main'}
 
-events = {12: "Quit", 25: "Movement", 26: "Death", 27: "Switch", 28: "Finished"}
+events = {12: "Quit", 25: "Movement", 26: "Death", 27: "Switch", 28: "Finish"}
 
 image_counts = {'screen': 3, 'city': 3, 'vacation': 7, 'pet': 7, 'food': 7}
 
