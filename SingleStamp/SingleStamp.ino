@@ -88,7 +88,7 @@ void loop()
           case 2: M5.Lcd.clear(); M5.Lcd.drawString("Haustier/Pet", 160, 120, 2); break;
           case 3: M5.Lcd.clear(); M5.Lcd.drawString("Screenshot", 160, 120, 2); break;
           case 4: M5.Lcd.clear(); M5.Lcd.drawString("Urlaub/Vacation", 160, 120, 2); break;
-          case 5: M5.Lcd.clear(); M5.Lcd.drawString("Ordner öffnen", 160, 120, 2); break;
+          case 5: M5.Lcd.clear(); M5.Lcd.drawString("Ordner oeffnen", 160, 120, 2); break;
           default: break;
         }  
           // We now create a URI for the request
