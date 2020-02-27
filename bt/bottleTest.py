@@ -21,7 +21,6 @@ class LogBottle(threading.Thread):
     def log(content):
         my_event = pygame.event.Event(pygame.USEREVENT + 3, mode=content)
         pygame.event.post(my_event)
-        logging.info(content)
         pass
 
     def run(self):
