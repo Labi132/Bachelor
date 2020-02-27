@@ -141,7 +141,7 @@ def reset_image_positions(imagl, pos_list):
     k = 0
     for x in imagl:
         if x.get_screen() == screens[5]:
-            x.set_center(pos_list[k][0], pos_list[k][1])
+            x.set_center_reset(pos_list[k][0], pos_list[k][1])
             k += 1
 
 
@@ -238,17 +238,17 @@ def img_folder_collision(collisions_img_folders, image_counter, current_screen):
                     if x.get_screen() == folders[i].get_tag():
                         if prev != screens[5]:
                             y = folders_invers[prev]
-                            folders[y].remove_item(x)
+                            folders[y].remove_item()
                         x.change_screen(screens[5])
                         image_counter += 1
                     else:
                         if prev != screens[5]:
                             y = folders_invers[prev]
-                            folders[y].remove_item(x)
+                            folders[y].remove_item()
                         else:
                             image_counter -= 1
                         x.change_screen(screens[i])
-                        folders[i].add_item(x)
+                        folders[i].add_item()
                 x.update(current_screen)
 
 
@@ -423,9 +423,8 @@ def main():
                             reset_image_positions(image_list, pos_list)
                             reset_folder_position(folder_list)
                         else:
-                            current_screen = collisions_open_folders[
-                                0].get_tag()
-                            collisions_open_folders[0].reset_positions()
+                            current_screen = collisions_open_folders[0].get_tag()
+                            collisions_open_folders[0].reset_positions(image_list)
                             reset_folder_position(folder_list)
                         folder_once = True
                     if highlight_coll:
