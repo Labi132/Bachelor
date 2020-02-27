@@ -156,7 +156,7 @@ def reset_image_positions(imagl, pos_list):
     k = 0
     for x in imagl:
         if x.get_screen() == screens[5]:
-            x.set_center(pos_list[k][0], pos_list[k][1])
+            x.set_center_reset(pos_list[k][0], pos_list[k][1])
             k += 1
 
 
@@ -239,17 +239,17 @@ def img_folder_collision(collisions_img_folders, current_screen, new_screen):
                 current_img_screen = x.get_screen()
                 if current_img_screen == new_screen:
                     y = folders_invers[current_img_screen]
-                    folders[y].remove_item(x)
+                    folders[y].remove_item()
                     x.change_screen(screens[5])
                     image_counter += 1
                 else:
                     if current_img_screen != screens[5]:
                         y = folders_invers[current_img_screen]
-                        folders[y].remove_item(x)
+                        folders[y].remove_item()
                     else:
                         image_counter -= 1
                     x.change_screen(new_screen)
-                    folders[i].add_item(x)
+                    folders[i].add_item()
                 x.update(current_screen)
 
 
@@ -346,7 +346,6 @@ def main():
             if event.type == TANGIBLESWITCH:
                 log(tang[SINGLE], event.type, mode)
                 mode = modes[event.mode]
-                print(mode)
                 log(tang[SINGLE], event.type, mode)
 
             if event.type == TANGIBLEMOVE:
@@ -362,9 +361,8 @@ def main():
                             reset_image_positions(image_list, pos_list)
                             reset_folder_position()
                         else:
-                            current_screen = collisions_open_folders[
-                                0].get_tag()
-                            collisions_open_folders[0].reset_positions()
+                            current_screen = collisions_open_folders[0].get_tag()
+                            collisions_open_folders[0].reset_positions(image_list)
                             reset_folder_position()
                         image_list.update(current_screen)
                         folder_once = True
