@@ -150,7 +150,7 @@ def reset_image_positions(imagl, pos_list):
     k = 0
     for x in imagl:
         if x.get_screen() == screens[5]:
-            x.set_center(pos_list[k][0], pos_list[k][1])
+            x.set_center_reset(pos_list[k][0], pos_list[k][1])
             k += 1
 
 
@@ -230,27 +230,27 @@ def start_servers(event_source):
     # ENDE KOPIERTER CODE HIER
 
 
-def img_folder_collision(collisions_img_folders, current_screen, new_screen):
+def move_image(collisions_img_folders, current_screen, new_screen):
     for i in range(len(collisions_img_folders)):
         if collisions_img_folders[i]:
             x = collisions_img_folders[i]
             global image_counter
             if x.get_active():
-                prev = x.get_screen()
-                if x.get_screen() == folders[i].get_tag():
-                    if prev != screens[5]:
-                        y = folders_invers[prev]
-                        folders[y].remove_item(x)
+                current = x.get_screen()
+                if current == new_screen:
+                    if current != screens[5]:
+                        y = folders_invers[current]
+                        folders[y].remove_item()
                     x.change_screen(screens[5])
                     image_counter += 1
                 else:
-                    if prev != screens[5]:
-                        y = folders_invers[prev]
-                        folders[y].remove_item(x)
+                    if current != screens[5]:
+                        y = folders_invers[current]
+                        folders[y].remove_item()
                     else:
                         image_counter -= 1
                     x.change_screen(new_screen)
-                    folders[i].add_item(x)
+                    folders[i].add_item()
                 x.update(current_screen)
 
 
@@ -352,8 +352,6 @@ def main():
                     sys.exit()
 
             if event.type == TANGIBLEMOVE:
-                print(event.who.get_class_id())
-
                 # Enter
                 if event.who.get_class_id() == ENTER:
                     once_enter = False
@@ -365,41 +363,40 @@ def main():
                             reset_image_positions(image_list, pos_list)
                             reset_folder_position()
                         else:
-                            current_screen = collisions_open_folders[
-                                0].get_tag()
-                            collisions_open_folders[0].reset_positions()
+                            current_screen = collisions_open_folders[0].get_tag()
+                            collisions_open_folders[0].reset_positions(image_list)
                             reset_folder_position()
                         folder_once = True
 
                 # City
                 if event.who.get_class_id() == CITY:
                     tangible_alive(tang[CITY], event, mode)
-                    img_folder_collision(collisions_tangibles[CITY],
-                                         current_screen, screens[CITY])
+                    move_image(collisions_tangibles[CITY],
+                               current_screen, screens[CITY])
 
                 # Screenshot
                 if event.who.get_class_id() == SCREENSHOT:
                     tangible_alive(tang[SCREENSHOT], event, mode)
-                    img_folder_collision(collisions_tangibles[SCREENSHOT],
-                                         current_screen, screens[SCREENSHOT])
+                    move_image(collisions_tangibles[SCREENSHOT],
+                               current_screen, screens[SCREENSHOT])
 
                 # Food
                 if event.who.get_class_id() == FOOD:
                     tangible_alive(tang[FOOD], event, mode)
-                    img_folder_collision(collisions_tangibles[FOOD],
-                                         current_screen, screens[FOOD])
+                    move_image(collisions_tangibles[FOOD],
+                               current_screen, screens[FOOD])
 
                 # Pet
                 if event.who.get_class_id() == PET:
                     tangible_alive(tang[PET], event, mode)
-                    img_folder_collision(collisions_tangibles[PET],
-                                         current_screen, screens[PET])
+                    move_image(collisions_tangibles[PET],
+                               current_screen, screens[PET])
 
                 # Vacation
                 if event.who.get_class_id() == VACATION:
                     tangible_alive(tang[VACATION], event, mode)
-                    img_folder_collision(collisions_tangibles[VACATION],
-                                         current_screen, screens[VACATION])
+                    move_image(collisions_tangibles[VACATION],
+                               current_screen, screens[VACATION])
 
             if event.type == TANGIBLEDEATH:
                 tangible_id = event.who.get_class_id()

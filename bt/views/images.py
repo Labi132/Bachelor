@@ -43,9 +43,6 @@ class Images(pygame.sprite.Sprite):
 
     def change_screen(self, screen):
         if self.active and not self.has_changed:
-            print("SELF CURRENT: " + str(self.current_screen))
-            print("TAG:" + str(self.tag))
-            print(screen)
             self.current_screen = screen
             self.has_changed = True
 
@@ -59,6 +56,10 @@ class Images(pygame.sprite.Sprite):
         if self.active:
             self.rect.center = (x_coord, y_coord)
             self.text_rect.center = (x_coord, y_coord + 60)
+
+    def set_center_reset(self, x_coord, y_coord):
+        self.rect.center = (x_coord, y_coord)
+        self.text_rect.center = (x_coord, y_coord + 60)
 
     def get_center(self):
         if self.active:
@@ -155,21 +156,27 @@ class ImageFolder(pygame.sprite.Sprite):
     def decrease_counter(self):
         self.counter -= 1
 
-    def add_item(self, item):
-        item.set_center(self.positions[self.counter][0],
-                        self.positions[self.counter][1])
-        self.images.append(item)
+    def add_item(self):  # (self, item):
+        # item.set_center(self.positions[self.counter][0],
+        #                 self.positions[self.counter][1])
+        # self.images.append(item)
         self.increase_counter()
 
-    def remove_item(self, item):
-            self.images.remove(item)
+    def remove_item(self):  # (self, item):
+            # self.images.remove(item)
             self.decrease_counter()
 
-    def reset_positions(self):
+    def reset_positions(self, image_list):
         k = 0
+        for x in image_list:
+            if x.get_screen() == self.tag:
+                x.set_center_reset(self.positions[k][0], self.positions[k][1])
+                k += 1
+        """k = 0
         for x in self.images:
             x.set_center(self.positions[k][0], self.positions[k][1])
             k += 0
+            """
 
     def update(self, current_s):
         if self.tag == current_s:
