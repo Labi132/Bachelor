@@ -15,10 +15,10 @@ from parsers.MessageTypes import MessageTypes
 
 from EventFire import EventFire
 
-# from bottleTest import LogBottle
-
 from views.images import Images, ImageList, ImageFolder
 from views.tangible import Tangible, Circle
+
+import nasatlx
 
 white = [255, 255, 255]
 
@@ -33,33 +33,34 @@ TANGIBLEDEATH = pygame.USEREVENT + 2
 TANGIBLESWITCH = pygame.USEREVENT + 3
 FINISH = pygame.USEREVENT + 4
 
-images = {('views/Bilder/city/1850-31663-22486.jpg', 'city'),
-          ('views/Bilder/city/16698-19509-21439.jpg', 'city'),
-          ('views/Bilder/city/2527-28344-8750.jpg', 'city'),
-          ('views/Bilder/food/1784-13303-25651.jpg', 'food'),
-          ('views/Bilder/food/26952-9826-8440.jpg', 'food'),
-          ('views/Bilder/food/5814-21354-6198.jpg', 'food'),
-          ('views/Bilder/food/6922-6421-23761.jpg', 'food'),
-          ('views/Bilder/food/9136-30157-13435.jpg', 'food'),
-          ('views/Bilder/food/7630-25710-28850.jpg', 'food'),
-          ('views/Bilder/food/13227-23271-24173.jpg', 'food'),
-          ('views/Bilder/pet/1663-8828-20036.jpg', 'pet'),
-          ('views/Bilder/pet/21345-21403-26991.jpg', 'pet'),
-          ('views/Bilder/pet/21725-31359-17861.jpg', 'pet'),
-          ('views/Bilder/pet/5024-11894-22132.jpg', 'pet'),
-          ('views/Bilder/pet/9197-7767-11525.jpg', 'pet'),
-          ('views/Bilder/pet/21481-16485-2477.jpg', 'pet'),
-          ('views/Bilder/pet/11026-4826-27783.jpg', 'pet'),
-          ('views/Bilder/vacation/1520-27418-20445.jpg', 'vacation'),
-          ('views/Bilder/vacation/11135-26313-18055.jpg', 'vacation'),
-          ('views/Bilder/vacation/15850-29087-12247.jpg', 'vacation'),
-          ('views/Bilder/vacation/13395-18402-20194.jpg', 'vacation'),
-          ('views/Bilder/vacation/18127-625-18110.jpg', 'vacation'),
-          ('views/Bilder/vacation/12269-16141-10967.jpg', 'vacation'),
-          ('views/Bilder/vacation/28778-18317-17021.jpg', 'vacation'),
-          ('views/Bilder/screenshot/1579-24281-14320.PNG', 'screen'),
-          ('views/Bilder/screenshot/18291-15368-23200.PNG', 'screen'),
-          ('views/Bilder/screenshot/6338-9164-14544.PNG', 'screen')}
+images = {('/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/views/Bilder/city/1850-31663-22486.jpg', 'city'),
+          ('/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/views/Bilder/city/16698-19509-21439.jpg', 'city'),
+          ('/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/views/Bilder/city/2527-28344-8750.jpg', 'city'),
+          ('/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/views/Bilder/food/1784-13303-25651.jpg', 'food'),
+          ('/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/views/Bilder/food/26952-9826-8440.jpg', 'food'),
+          ('/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/views/Bilder/food/5814-21354-6198.jpg', 'food'),
+          ('/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/views/Bilder/food/6922-6421-23761.jpg', 'food'),
+          ('/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/views/Bilder/food/9136-30157-13435.jpg', 'food'),
+          ('/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/views/Bilder/food/7630-25710-28850.jpg', 'food'),
+          ('/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/views/Bilder/food/13227-23271-24173.jpg', 'food'),
+          ('/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/views/Bilder/pet/1663-8828-20036.jpg', 'pet'),
+          ('/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/views/Bilder/pet/21345-21403-26991.jpg', 'pet'),
+          ('/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/views/Bilder/pet/21725-31359-17861.jpg', 'pet'),
+          ('/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/views/Bilder/pet/5024-11894-22132.jpg', 'pet'),
+          ('/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/views/Bilder/pet/9197-7767-11525.jpg', 'pet'),
+          ('/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/views/Bilder/pet/21481-16485-2477.jpg', 'pet'),
+          ('/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/views/Bilder/pet/11026-4826-27783.jpg', 'pet'),
+          ('/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/views/Bilder/vacation/1520-27418-20445.jpg', 'vacation'),
+          ('/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/views/Bilder/vacation/11135-26313-18055.jpg', 'vacation'),
+          ('/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/views/Bilder/vacation/15850-29087-12247.jpg', 'vacation'),
+          ('/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/views/Bilder/vacation/13395-18402-20194.jpg', 'vacation'),
+          ('/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/views/Bilder/vacation/18127-625-18110.jpg', 'vacation'),
+          ('/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/views/Bilder/vacation/12269-16141-10967.jpg', 'vacation'),
+          ('/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/views/Bilder/vacation/28778-18317-17021.jpg', 'vacation'),
+          ('/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/views/Bilder/screenshot/1579-24281-14320.PNG', 'screen'),
+          ('/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/views/Bilder/screenshot/18291-15368-23200.PNG', 'screen'),
+          ('/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/views/Bilder/screenshot/6338-9164-14544.PNG', 'screen')}
+
 
 positions = {
     (100, 100), (100, 350), (100, 600), (100, 850),
@@ -88,7 +89,7 @@ events = {12: "Quit", 25: "Movement", 26: "Death", 27: "Switch", 28: "Finish"}
 image_counts = {'screen': 3, 'city': 3, 'vacation': 7, 'pet': 7, 'food': 7}
 
 PID = None
-INTERACTION = "Multiple"
+INTERACTION = None
 
 
 logging.basicConfig(filename='log.txt', format='%(asctime)s %(message)s',
@@ -189,25 +190,10 @@ def death_drag(lock_list):
 
 
 def start_servers(event_source):
-    # Bottle Server
-
-    """
-    removing bottle server since its unused in multi tangible setting currently
-
-    bottle = LogBottle()
-    bottle.start()
-    """
-
     # threading.Thread(target=bottle.run).start()
 
     # Aus Jürgens Code
     mp = MessageParser(event_source)
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--ip", default="127.0.0.1", help="The ip to listen on")
-    parser.add_argument("--port", type=int, default=3333,
-                        help="The port to listen on")
-    args = parser.parse_args()
 
     dispatch = dispatcher.Dispatcher()
     dispatch.map(MessageTypes.POINTER.value, mp.parse)
@@ -217,7 +203,7 @@ def start_servers(event_source):
     dispatch.map(MessageTypes.ALIVE.value, mp.parse)
     dispatch.map(MessageTypes.SYMBOL.value, mp.parse)
 
-    server = osc_server.ThreadingOSCUDPServer((args.ip, args.port), dispatch)
+    server = osc_server.ThreadingOSCUDPServer(("127.0.0.1", 3333), dispatch)
 
     print("Serving on {}".format(server.server_address))
 
@@ -261,7 +247,11 @@ def tangible_alive(tang, event, mode):
 # define a main function
 def main():
     global PID
-    PID = input("Bitte geben Sie Ihre ID ein: ")
+    global INTERACTION
+
+    PID = sys.argv[1]
+    INTERACTION = sys.argv[2]
+
     pos_list = list(positions)
     pos_list.sort()
 
@@ -364,7 +354,7 @@ def main():
                 running = False
                 server.shutdown()
                 pygame.quit()
-                sys.exit()
+                nasatlx.main()
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
@@ -372,7 +362,7 @@ def main():
                     running = False
                     server.shutdown()
                     pygame.quit()
-                    sys.exit()
+                    nasatlx.main()
 
             if event.type == TANGIBLEMOVE:
                 # move tangibles into folders
