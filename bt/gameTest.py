@@ -337,7 +337,7 @@ def main():
                 running = False
                 server.shutdown()
                 pygame.quit()
-                exec(open("/home/lab/Desktop/Eder-Bachelor/tlx-python/nasa-tlx.py").read())
+                nasatlx.main()
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
