@@ -1,5 +1,4 @@
 from bottle import route, run, get, post, request, Bottle
-import waitress
 import logging
 import threading
 import pygame
@@ -15,6 +14,7 @@ class LogBottle(threading.Thread):
         self.app = Bottle()
         self.host = '132.199.132.227'
         self.port = 3030
+        self.daemon = True
 
     @staticmethod
     @get('/log/<content>')  # or @route('/login')
