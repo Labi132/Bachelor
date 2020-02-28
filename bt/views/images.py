@@ -90,7 +90,7 @@ class ImageFolder(pygame.sprite.Sprite):
 
     def __init__(self, tag, pos_list):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load('views/folder.png')
+        self.image = pygame.image.load('/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/views/folder.png')
         self.image = pygame.transform.smoothscale(self.image, (120, 100))
         self.tag = tag
         self.rect = self.image.get_rect()
