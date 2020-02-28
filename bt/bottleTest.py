@@ -1,8 +1,8 @@
 from bottle import route, run, get, post, request, Bottle
-import waitress
 import logging
 import threading
 import pygame
+
 
 logging.basicConfig(filename='log.txt',format='%(asctime)s %(message)s',
                     level=logging.INFO)
@@ -15,6 +15,7 @@ class LogBottle(threading.Thread):
         self.app = Bottle()
         self.host = '132.199.132.227'
         self.port = 3030
+        self.daemon = True
 
     @staticmethod
     @get('/log/<content>')
@@ -24,4 +25,4 @@ class LogBottle(threading.Thread):
         pass
 
     def run(self):
-        run(server='waitress', host=self.host, port=self.port)
+            run(server='waitress', host=self.host, port=self.port)
