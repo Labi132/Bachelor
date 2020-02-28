@@ -230,21 +230,22 @@ def start_servers(event_source):
     # ENDE KOPIERTER CODE HIER
 
 
-def img_folder_collision(collisions_img_folders, current_screen, new_screen):
+def move_image(collisions_img_folders, current_screen, new_screen):
     for i in range(len(collisions_img_folders)):
         if collisions_img_folders[i]:
             x = collisions_img_folders[i]
             global image_counter
             if x.get_active():
-                current_img_screen = x.get_screen()
-                if current_img_screen == new_screen:
-                    y = folders_invers[current_img_screen]
-                    folders[y].remove_item()
+                current = x.get_screen()
+                if current == new_screen:
+                    if current != screens[5]:
+                        y = folders_invers[current]
+                        folders[y].remove_item()
                     x.change_screen(screens[5])
                     image_counter += 1
                 else:
-                    if current_img_screen != screens[5]:
-                        y = folders_invers[current_img_screen]
+                    if current != screens[5]:
+                        y = folders_invers[current]
                         folders[y].remove_item()
                     else:
                         image_counter -= 1
@@ -369,28 +370,28 @@ def main():
 
                 # City
                 if mode == CITY:
-                    img_folder_collision(collisions_tangibles,
-                                         current_screen, screens[CITY])
+                    move_image(collisions_tangibles,
+                               current_screen, screens[CITY])
 
                 # Screenshot
                 if mode == SCREENSHOT:
-                    img_folder_collision(collisions_tangibles,
-                                         current_screen, screens[SCREENSHOT])
+                    move_image(collisions_tangibles,
+                               current_screen, screens[SCREENSHOT])
 
                 # Food
                 if mode == FOOD:
-                    img_folder_collision(collisions_tangibles,
-                                         current_screen, screens[FOOD])
+                    move_image(collisions_tangibles,
+                               current_screen, screens[FOOD])
 
                 # Pet
                 if mode == PET:
-                    img_folder_collision(collisions_tangibles,
-                                         current_screen, screens[PET])
+                    move_image(collisions_tangibles,
+                               current_screen, screens[PET])
 
                 # Vacation
                 if mode == VACATION:
-                    img_folder_collision(collisions_tangibles,
-                                         current_screen, screens[VACATION])
+                    move_image(collisions_tangibles,
+                               current_screen, screens[VACATION])
 
             if event.type == TANGIBLEDEATH:
                 collisions_tangibles = []
