@@ -37,7 +37,7 @@ void setup()
     M5.Lcd.drawJpgFile(SD, "/drag.jpg", 0, 0, 320, 240);
 }
 
-String mode[5] = {"DRAG", "HIGHLIGHT",  "GROUP", "PAN", "ZOOM"};
+String mode[5] = {"HIGHLIGHT", "DRAG", "GROUP", "PAN", "ZOOM"};
 int current_mode = 1;
 bool mode_changed = false;
 
