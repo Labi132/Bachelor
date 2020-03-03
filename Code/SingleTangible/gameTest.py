@@ -7,20 +7,20 @@ import random
 
 import pygame
 
-from lib.pythonosc import dispatcher
-from lib.pythonosc import osc_server
+from ..lib.pythonosc import dispatcher
+from ..lib.pythonosc import osc_server
 
-from parsers.MessageParser import MessageParser
-from parsers.MessageTypes import MessageTypes
+from ..parsers.MessageParser import MessageParser
+from ..parsers.MessageTypes import MessageTypes
 
-from EventFire import EventFire
+from ..EventFire import EventFire
 
-from bottleTest import LogBottle
+from ..bottleTest import LogBottle
 
-from views.images import Images, ImageList, ImageFolder
-from views.tangible import Tangible, Circle
+from ..views.images import Images, ImageList, ImageFolder
+from ..views.tangible import Tangible, Circle
 
-import nasatlx
+import ..nasatlx
 
 white = [255, 255, 255]
 
@@ -175,7 +175,6 @@ def log(tangible, eventtype, mode):
     # "PID: " + str(PID) + ", "
     message += str(INTERACTION) + ", "
     # "Interaction Style: " + str(INTERACTION) + ", "
-    """if INTERACTION == "Multiple":"""
     message += str(modes_logging[mode]) + ", "
     # "Mode: " + str(MODE) + ", "
     message += str(events[eventtype]) + ", "
@@ -313,7 +312,7 @@ def main():
     timer_highlight = time.perf_counter()
     timer_delay = 0.5
 
-    """Flags damit die endgültigen death events nur einmal pro death ausgelöst 
+    """Flags damit die endgültigen death events nur einmal pro death ausgelöst
     werden"""
     once_highlight = False
 
@@ -370,6 +369,13 @@ def main():
                 log(tang[SINGLE], event.type, mode)
                 mode = modes[event.mode]
                 log(tang[SINGLE], event.type, mode)
+                if mode == DRAG:
+                    tang[SINGLE].set_lockable(True)
+                if mode == PAN:
+                    pan_center = tang[SINGLE].get_center()
+                    pan_circle.set_center(pan_center)
+                if mode != ZOOM:
+                    zoomed_img = None
 
             if event.type == TANGIBLEMOVE:
 
