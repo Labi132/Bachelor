@@ -7,20 +7,20 @@ import random
 
 import pygame
 
-from ..lib.pythonosc import dispatcher
-from ..lib.pythonosc import osc_server
+from lib.pythonosc import dispatcher
+from lib.pythonosc import osc_server
 
-from ..parsers.MessageParser import MessageParser
-from ..parsers.MessageTypes import MessageTypes
+from parsers.MessageParser import MessageParser
+from parsers.MessageTypes import MessageTypes
 
-from ..EventFire import EventFire
+from EventFire import EventFire
 
-from ..bottleTest import LogBottle
+from bottleTest import LogBottle
 
-from ..views.images import Images, ImageList, ImageFolder
-from ..views.tangible import Tangible, Circle
+from views.images import Images, ImageList, ImageFolder
+from views.tangible import Tangible, Circle
 
-import ..nasatlx
+import nasatlx
 
 white = [255, 255, 255]
 
