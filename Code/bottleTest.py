@@ -3,6 +3,7 @@ import logging
 import threading
 import pygame
 
+
 logging.basicConfig(filename='log.txt',format='%(asctime)s %(message)s',
                     level=logging.INFO)
 
@@ -17,11 +18,11 @@ class LogBottle(threading.Thread):
         self.daemon = True
 
     @staticmethod
-    @get('/log/<content>')  # or @route('/login')
+    @get('/log/<content>')
     def log(content):
         my_event = pygame.event.Event(pygame.USEREVENT + 3, mode=content)
         pygame.event.post(my_event)
         pass
 
     def run(self):
-        run(server='waitress', host=self.host, port=self.port)
+            run(server='waitress', host=self.host, port=self.port)

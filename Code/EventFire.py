@@ -12,6 +12,3 @@ class EventFire:
         my_event = pygame.event.Event(pygame.USEREVENT+2, who=tang)
         pygame.event.post(my_event)
 
-    def tangible_switch(self, mode):
-        my_event = pygame.event.Event(pygame.USEREVENT+3, mode=mode)
-        pygame.event.post(my_event)

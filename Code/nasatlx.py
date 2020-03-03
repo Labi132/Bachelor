@@ -36,12 +36,12 @@ class NasaTLX(QtWidgets.QWizard):
                     padding-left: 10px;
                     padding-right: 10px;
                 }
-                
+
                 .QSlider::groove:horizontal {
                     height: 0px;
                     background: #000000;
                 }
-                
+
                 .QSlider::handle:horizontal {
                     background: #22B14C;
                     border: 5px solid #B5E61D;
@@ -111,4 +111,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
