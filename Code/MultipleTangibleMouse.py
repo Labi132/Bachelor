@@ -7,18 +7,18 @@ import random
 
 import pygame
 
-from ..lib.pythonosc import dispatcher
-from ..lib.pythonosc import osc_server
+from lib.pythonosc import dispatcher
+from lib.pythonosc import osc_server
 
-from ..parsers.MessageParser import MessageParser
-from ..parsers.MessageTypes import MessageTypes
+from parsers.MessageParser import MessageParser
+from parsers.MessageTypes import MessageTypes
 
-from ..EventFire import EventFire
+from EventFire import EventFire
 
-from ..views.images import Images, ImageList, ImageFolder
-from ..views.tangible import Tangible, Circle
+from views.images import Images, ImageList, ImageFolder
+from views.tangible import Tangible, Circle
 
-from .. import nasatlx
+import nasatlx
 
 white = [255, 255, 255]
 
@@ -92,13 +92,13 @@ PID = None
 INTERACTION = None
 
 
-logging.basicConfig(filename='log.txt', format='%(asctime)s %(message)s',
+logging.basicConfig(filename='tangibles_log.txt', format='%(asctime)s %(message)s',
                     level=logging.INFO)
 
 
 def create_tangibles(tangl):
     for key in tangibles:
-        new_tang = Tangible([], key)
+        new_tang = Tangible(key)
         tang[key] = new_tang
         tangl.add(new_tang)
 

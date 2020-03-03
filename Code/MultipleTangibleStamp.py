@@ -7,20 +7,18 @@ import random
 
 import pygame
 
-from ..lib.pythonosc import dispatcher
-from ..lib.pythonosc import osc_server
+from lib.pythonosc import dispatcher
+from lib.pythonosc import osc_server
 
-from ..parsers.MessageParser import MessageParser
-from ..parsers.MessageTypes import MessageTypes
+from parsers.MessageParser import MessageParser
+from parsers.MessageTypes import MessageTypes
 
-from ..EventFire import EventFire
+from EventFire import EventFire
 
-# from bottleTest import LogBottle
+from views.images import Images, ImageList, ImageFolder
+from views.tangible import Tangible
 
-from ..views.images import Images, ImageList, ImageFolder
-from ..views.tangible import Tangible
-
-from .. import nasatlx
+import nasatlx
 
 white = [255, 255, 255]
 
@@ -102,7 +100,7 @@ INTERACTION = None
 image_counter = 0
 
 
-logging.basicConfig(filename='log.txt', format='%(asctime)s %(message)s',
+logging.basicConfig(filename='tangibles_log.txt', format='%(asctime)s %(message)s',
                     level=logging.INFO)
 
 

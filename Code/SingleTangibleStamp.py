@@ -108,7 +108,7 @@ INTERACTION = None
 image_counter = 0
 
 
-logging.basicConfig(filename='log.txt', format='%(asctime)s %(message)s',
+logging.basicConfig(filename='tangibles_log.txt', format='%(asctime)s %(message)s',
                     level=logging.INFO)
 
 
