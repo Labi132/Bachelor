@@ -369,6 +369,11 @@ def main():
             if event.type == TANGIBLESWITCH:
                 log(tang[SINGLE], event.type, mode)
                 mode = modes[event.mode]
+                if mode == PAN:
+                    pan_center = tang[SINGLE].get_center()
+                    pan_circle.set_center(pan_center)
+                if mode != ZOOM:
+                    zoomed_img = None
                 log(tang[SINGLE], event.type, mode)
 
             if event.type == TANGIBLEMOVE:
