@@ -7,24 +7,15 @@ red = [255, 0, 0]
 class Tangible(pygame.sprite.Sprite):
     offset = -50
 
-    def __init__(self, bounds, id):
+    def __init__(self, id):
         pygame.sprite.Sprite.__init__(self)
         self.id = id
-
-        if bounds != []:
-            self.image = pygame.Surface((bounds.width, bounds.height))
-            self.image.fill(white)
-            self.rect = self.image.get_rect()
-            self.rect.center = (bounds.get_position())
-            self.lockable = False
-            self.alive = True
-        else:
-            self.image = pygame.Surface((90, 90))
-            self.image.fill(white)
-            self.rect = self.image.get_rect()
-            self.rect.center = (-500, -500)
-            self.lockable = False
-            self.alive = False
+        self.image = pygame.Surface((90, 90))
+        self.image.fill(white)
+        self.rect = self.image.get_rect()
+        self.rect.center = (-500, -500)
+        self.lockable = False
+        self.alive = False
 
     def set_center(self, coords):
         self.rect.center = (coords[0], coords[1])
