@@ -6,8 +6,8 @@ import csv
 from PyQt5 import QtWidgets, uic
 import os
 
-UI_FILE = '/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/questionnaires/nasa-tlx.ui'
-LOG_DIRECTORY = '/home/lab/Desktop/Eder-Bachelor/Bachelor/bt/log/'
+UI_FILE = '/home/lab/Desktop/Eder-Bachelor/Bachelor/Code/questionnaires/nasa-tlx.ui'
+LOG_DIRECTORY = '/home/lab/Desktop/Eder-Bachelor/Bachelor/Code/log/'
 
 
 class NasaTLX(QtWidgets.QWizard):
