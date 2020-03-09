@@ -1,11 +1,6 @@
 from bottle import route, run, get, post, request, Bottle
-import logging
 import threading
 import pygame
-
-
-logging.basicConfig(filename='log.txt',format='%(asctime)s %(message)s',
-                    level=logging.INFO)
 
 
 class LogBottle(threading.Thread):
