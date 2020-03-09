@@ -99,13 +99,13 @@ PID = None
 INTERACTION = None
 
 
-logging.basicConfig(filename='log.txt', format='%(asctime)s %(message)s',
+logging.basicConfig(filename='tangibles_log.txt', format='%(asctime)s %(message)s',
                     level=logging.INFO)
 
 
 def create_tangibles(tangl):
     for key in tangibles:
-        new_tang = Tangible([], key)
+        new_tang = Tangible(key)
         tang[key] = new_tang
         tangl.add(new_tang)
 

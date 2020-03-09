@@ -7,20 +7,18 @@ import random
 
 import pygame
 
-from ..lib.pythonosc import dispatcher
-from ..lib.pythonosc import osc_server
+from lib.pythonosc import dispatcher
+from lib.pythonosc import osc_server
 
-from ..parsers.MessageParser import MessageParser
-from ..parsers.MessageTypes import MessageTypes
+from parsers.MessageParser import MessageParser
+from parsers.MessageTypes import MessageTypes
 
-from ..EventFire import EventFire
+from EventFire import EventFire
 
-# from bottleTest import LogBottle
+from views.images import Images, ImageList, ImageFolder
+from views.tangible import Tangible
 
-from ..views.images import Images, ImageList, ImageFolder
-from ..views.tangible import Tangible
-
-from .. import nasatlx
+import nasatlx
 
 white = [255, 255, 255]
 
@@ -102,7 +100,7 @@ INTERACTION = None
 image_counter = 0
 
 
-logging.basicConfig(filename='log.txt', format='%(asctime)s %(message)s',
+logging.basicConfig(filename='tangibles_log.txt', format='%(asctime)s %(message)s',
                     level=logging.INFO)
 
 
@@ -222,23 +220,24 @@ def move_image(collisions_img_folders, current_screen, new_screen):
         if collisions_img_folders[i]:
             x = collisions_img_folders[i]
             global image_counter
-            if x.get_active():
-                current = x.get_screen()
-                if current == new_screen:
-                    if current != screens[5]:
-                        y = folders_invers[current]
-                        folders[y].remove_item()
-                    x.change_screen(screens[5])
-                    image_counter += 1
-                else:
-                    if current != screens[5]:
-                        y = folders_invers[current]
-                        folders[y].remove_item()
+            if isinstance(x, Images):
+                if x.get_active():
+                    current = x.get_screen()
+                    if current == new_screen:
+                        if current != screens[5]:
+                            y = folders_invers[current]
+                            folders[y].remove_item()
+                        x.change_screen(screens[5])
+                        image_counter += 1
                     else:
-                        image_counter -= 1
-                    x.change_screen(new_screen)
-                    folders[i].add_item()
-                x.update(current_screen)
+                        if current != screens[5]:
+                            y = folders_invers[current]
+                            folders[y].remove_item()
+                        else:
+                            image_counter -= 1
+                        x.change_screen(new_screen)
+                        folders[i].add_item()
+                    x.update(current_screen)
 
 
 def tangible_alive(tangible, event, mode):

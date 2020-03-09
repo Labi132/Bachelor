@@ -1,0 +1,5 @@
+participant_id,trial,mental_demand,physical_demand,temporal_demand,performance,effort,frustration
+P4,MM,6,0,4,10,4,5
+P4,SSt,0,0,2,2,2,0
+P4,SM,12,8,14,9,13,14
+P4,MSt,0,2,0,3,3,0
