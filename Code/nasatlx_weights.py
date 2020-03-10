@@ -9,8 +9,8 @@ LOG_DIRECTORY = '/home/lab/Desktop/Eder-Bachelor/Bachelor/Code/log/'
 class WeightedTLX(QtWidgets.QWizard):
     def __init__(self):
         super().__init__()
-        self.pid = 00# sys.argv[1]
-        self.task_type = 00# sys.argv[2]
+        self.pid = sys.argv[1]
+        self.task_type = sys.argv[2]
         self.time_demand = 0
         self.mental_demand = 0
         self.physical_demand = 0
@@ -21,7 +21,7 @@ class WeightedTLX(QtWidgets.QWizard):
 
     def init_ui(self):
         self.ui = uic.loadUi(UI_FILE, self)
-        # self.showFullScreen()
+        self.showFullScreen()
         self.button(QtWidgets.QWizard.FinishButton).clicked.connect(self.on_finished)
         self.show()
 
