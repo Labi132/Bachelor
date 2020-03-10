@@ -1,8 +1,8 @@
 #include <WiFi.h>
 #include <M5Stack.h>
 
-const char* ssid     = "sensor.uni-regensburg.de";
-const char* password = "iot2019tb";
+const char* ssid     = "WIN-GCII0CKRUO7 0159";
+const char* password = "Q5-9k195";
 
 const char* host = "132.199.132.227";
 

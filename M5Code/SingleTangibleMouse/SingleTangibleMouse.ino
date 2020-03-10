@@ -1,8 +1,8 @@
 #include <WiFi.h>
 #include <M5Stack.h>
 
-const char* ssid     = "sensor.uni-regensburg.de";
-const char* password = "iot2019tb";
+const char* ssid     = "WIN-GCII0CKRUO7 0159";
+const char* password = "Q5-9k195";
 
 const char* host = "132.199.132.227";
 
@@ -61,6 +61,7 @@ void loop()
         if (M5.BtnC.wasReleased()){
 
             if(current_mode == 4){
+              current_mode = 0;
                 mode_changed = true;
             }
             else{
@@ -80,10 +81,10 @@ void loop()
 
     if (mode_changed == true){
             switch(current_mode){
-          case 0: M5.Lcd.clear(); M5.Lcd.drawJpgFile(SD, "/highlight.jpg", 0, 0, 320, 240); break;
+          case 0: M5.Lcd.clear(); M5.Lcd.drawJpgFile(SD, "/pan.jpg", 0, 0, 320, 240); break;
           case 1: M5.Lcd.clear(); M5.Lcd.drawJpgFile(SD, "/drag.jpg", 0, 0, 320, 240); break;
-          case 2: M5.Lcd.clear(); M5.Lcd.drawJpgFile(SD, "/group.jpg", 0, 0, 320, 240); break;
-          case 3: M5.Lcd.clear(); M5.Lcd.drawJpgFile(SD, "/pan.jpg", 0, 0, 320, 240); break;
+          case 2: M5.Lcd.clear(); M5.Lcd.drawJpgFile(SD, "/highlight.jpg", 0, 0, 320, 240); break;
+          case 3: M5.Lcd.clear(); M5.Lcd.drawJpgFile(SD, "/group.jpg", 0, 0, 320, 240); break;
           case 4: M5.Lcd.clear(); M5.Lcd.drawJpgFile(SD, "/zoom.jpg", 0, 0, 320, 240); break;
           default: break;
         }  

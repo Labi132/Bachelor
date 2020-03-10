@@ -1,42 +1,33 @@
 import sys
 import csv
 import os
-# from PyQt5 import QtWidgets, uic
+from PyQt5 import QtWidgets, uic
 
+UI_FILE = '/home/lab/Desktop/Eder-Bachelor/Bachelor/Code/questionnaires/nasa-tlx_weighted.ui'
 LOG_DIRECTORY = '/home/lab/Desktop/Eder-Bachelor/Bachelor/Code/log/'
 
-class WeightedTLX():
+class WeightedTLX(QtWidgets.QWizard):
     def __init__(self):
-        self.pid = sys.argv[1]
-        self.task_type = sys.argv[2]
+        super().__init__()
+        self.pid = 00# sys.argv[1]
+        self.task_type = 00# sys.argv[2]
         self.time_demand = 0
         self.mental_demand = 0
         self.physical_demand = 0
         self.performance = 0
         self.effort = 0
         self.frustration = 0
+        self.init_ui()
+
+    def init_ui(self):
+        self.ui = uic.loadUi(UI_FILE, self)
+        # self.showFullScreen()
+        self.button(QtWidgets.QWizard.FinishButton).clicked.connect(self.on_finished)
+        self.show()
 
 
-    def on_click(self):
-        # get button type/name
-        self.increment_counter() # übergib button/buttonname
-        # next
-
-    def increment_counter(self, type):
-        if type == "time":
-            self.time_demand += 1
-        if type == "mental":
-            self.mental_demand += 1
-        if type == "physical":
-            self.physical_demand += 1
-        if type == "performance":
-            self.performance += 1
-        if type == "effort":
-            self.effort += 1
-        if type == "frustration":
-            self.frustration += 1
-
-    def on_finish(self):
+    def on_finished(self):
+        self.read_sliders()
         self.write_to_csv()
 
     def write_to_csv(self):
@@ -68,39 +59,87 @@ class WeightedTLX():
                              self.effort,
                              self.frustration])
 
-    def selection(self, item1, item2):
-        msg = "Bitte wählen Sie aus welcher Aspekt für die Duchrführung der Aufgabe am bedeutsamsten war. "
-        msg += item1 + "(1) oder "
-        msg += item2 + "(2)."
-        s = input(msg)
-        if s == "1":
-            return item1
-        if s == "2":
-            return item2
+    def read_sliders(self):
+        if self.ui.effort_performance.value() == 0:
+            self.effort += 1
         else:
-            return self.selection(item1, item2)
+            self.performance += 1
+
+        if self.ui.effort_physical.value() == 0:
+            self.effort += 1
+        else:
+            self.physical_demand += 1
+
+        if self.ui.frustration_effort.value() == 0:
+            self.frustration += 1
+        else:
+            self.effort += 1
+
+        if self.ui.frustration_mental.value() == 0:
+            self.frustration += 1
+        else:
+            self.mental_demand += 1
+
+        if self.ui.mental_effort.value() == 0:
+            self.mental_demand += 1
+        else:
+            self.effort += 1
+
+        if self.ui.mental_physical.value() == 0:
+            self.mental_demand += 1
+        else:
+            self.physical_demand += 1
+
+        if self.ui.performance_frustration.value() == 0:
+            self.performance += 1
+        else:
+            self.frustration += 1
+
+        if self.ui.performance_mental.value() == 0:
+            self.performance += 1
+        else:
+            self.mental_demand += 1
+
+        if self.ui.performance_time.value() == 0:
+            self.performance += 1
+        else:
+            self.time_demand += 1
+
+        if self.ui.physical_frustration.value() == 0:
+            self.physical_demand += 1
+        else:
+            self.frustration += 1
+
+        if self.ui.physical_performance.value() == 0:
+            self.physical_demand += 1
+        else:
+            self.performance += 1
+
+        if self.ui.physical_time.value() == 0:
+            self.physical_demand += 1
+        else:
+            self.time_demand += 1
+
+        if self.ui.time_effort.value() == 0:
+            self.time_demand += 1
+        else:
+            self.effort += 1
+
+        if self.ui.time_frustration.value() == 0:
+            self.time_demand += 1
+        else:
+            self.frustration += 1
+
+        if self.ui.time_mental.value() == 0:
+            self.time_demand += 1
+        else:
+            self.mental_demand += 1
 
 
 def main():
+    app = QtWidgets.QApplication(sys.argv)
     weights = WeightedTLX()
-    weights.increment_counter(weights.selection("effort", "performance"))
-    weights.increment_counter(weights.selection("time", "effort"))
-    weights.increment_counter(weights.selection("performance", "frustration"))
-    weights.increment_counter(weights.selection("physical", "performance"))
-    weights.increment_counter(weights.selection("time", "frustration"))
-    weights.increment_counter(weights.selection("physical", "frustration"))
-    weights.increment_counter(weights.selection("physical", "time"))
-    weights.increment_counter(weights.selection("time", "mental"))
-    weights.increment_counter(weights.selection("frustration", "effort"))
-    weights.increment_counter(weights.selection("performance", "mental"))
-    weights.increment_counter(weights.selection("performance", "time"))
-    weights.increment_counter(weights.selection("mental", "effort"))
-    weights.increment_counter(weights.selection("mental", "physical"))
-    weights.increment_counter(weights.selection("effort", "physical"))
-    weights.increment_counter(weights.selection("frustration", "mental"))
-    weights.on_finish()
+    sys.exit(app.exec_())
 
 
 
-
-main()

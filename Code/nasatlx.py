@@ -5,6 +5,7 @@ import sys
 import csv
 from PyQt5 import QtWidgets, uic
 import os
+import nasatlx_weights
 
 UI_FILE = '/home/lab/Desktop/Eder-Bachelor/Bachelor/Code/questionnaires/nasa-tlx.ui'
 LOG_DIRECTORY = '/home/lab/Desktop/Eder-Bachelor/Bachelor/Code/log/'
@@ -72,6 +73,7 @@ class NasaTLX(QtWidgets.QWizard):
         #print(self.ui.slider_frustration.value())
 
         self.write_to_csv()
+        nasatlx_weights.main()
 
     def write_to_csv(self):
         if not os.path.exists(LOG_DIRECTORY):
@@ -108,6 +110,3 @@ def main():
     nasaTLX = NasaTLX()
     sys.exit(app.exec_())
 
-
-if __name__ == '__main__':
-    main()
