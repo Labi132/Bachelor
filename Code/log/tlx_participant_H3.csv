@@ -1,0 +1,5 @@
+participant_id,trial,mental_demand,physical_demand,temporal_demand,performance,effort,frustration
+H3,SM,13,13,15,13,14,7
+H3,MM,13,18,7,14,12,14
+H3,MSt,2,10,0,2,7,4
+H3,SSt,6,2,6,2,4,6

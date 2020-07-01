@@ -1,0 +1,5 @@
+participant_id,trial,mental_demand_weight,physical_demand_weight,temporal_demand_weightperformance_weight,effort_weight,frustration_weight
+H3,SM,0,1,4,4,3,3
+H3,MM,2,5,0,1,3,4
+H3,MSt,3,5,1,3,3,0
+H3,SSt,0,2,2,4,4,3
