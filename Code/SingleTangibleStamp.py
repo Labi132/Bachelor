@@ -350,7 +350,10 @@ def main():
 
             if event.type == TANGIBLESWITCH:
                 log(tang[SINGLE], event.type, mode)
-                mode = modes[event.mode]
+                try:
+                    mode = modes[event.mode]
+                except KeyError:
+                    logging.info("Button pressed on currently unused tangible")
                 log(tang[SINGLE], event.type, mode)
 
             if event.type == TANGIBLEMOVE:
