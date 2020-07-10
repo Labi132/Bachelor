@@ -334,8 +334,6 @@ def main():
     while running:
         # event handling, gets all event from the event queue
         # Collision
-        # TODO: Zoom ordner?, bug beim groupen im gleichen ordner reproduzeiren und fixen,
-        #  list-Error beim ordnerwechsel fixen
         collisions_tangibles = []
 
         for x in folders.keys():
@@ -387,7 +385,7 @@ def main():
                                                                    False)
 
                 # move tangibles into folders
-                if not (tang[SINGLE].get_alive() and mode == PAN):
+                if not (tang[SINGLE].get_alive() and (mode == PAN or mode == GROUP)):
                     img_folder_collision(collisions_img_folders, image_counter,
                                          current_screen)
 
