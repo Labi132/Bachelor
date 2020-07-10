@@ -42,7 +42,7 @@ void setup()
 
 String mode[6] = {"CITY", "FOOD", "PET", "SCREENSHOT", "VACATION", "ENTER"};
 int current_mode = 0;
-bool mode_changed = false;
+bool mode_changed = true;
 
 void loop()
 {
