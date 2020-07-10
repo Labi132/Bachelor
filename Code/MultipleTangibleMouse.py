@@ -321,6 +321,8 @@ def main():
                             None]  # one none per tangible where collision
     # is relevant
 
+    collisions_group_folders = [None]
+
     # define a variable to control the main loop
     running = True
 
@@ -346,6 +348,8 @@ def main():
                                                               folder_list,
                                                               False)
 
+        collisions_group_folders = pygame.sprite.spritecollide(tang[GROUP], folder_list, False)
+
         check_ending(image_list)
 
         for event in pygame.event.get():
@@ -367,8 +371,15 @@ def main():
             if event.type == TANGIBLEMOVE:
                 # move tangibles into folders
                 if not tang[PAN].get_alive():
-                    img_folder_collision(collisions_img_folders, image_counter,
-                                         current_screen)
+                    if not tang[GROUP].get_alive():
+                        img_folder_collision(collisions_img_folders,
+                                             image_counter,
+                                             current_screen)
+                    else:
+                        if collisions_group_folders != []:
+                            img_folder_collision(collisions_img_folders,
+                                                 image_counter,
+                                                 current_screen)
 
                 # Drag
                 if event.who.get_class_id() == DRAG:

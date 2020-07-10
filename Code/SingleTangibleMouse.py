@@ -385,9 +385,11 @@ def main():
                                                                    False)
 
                 # move tangibles into folders
-                if not (tang[SINGLE].get_alive() and mode == PAN):
-                    img_folder_collision(collisions_img_folders, image_counter,
-                                         current_screen)
+                if not (tang[SINGLE].get_alive() and (mode == PAN or mode == GROUP)):
+                    if not (mode == GROUP and collisions_open_folders != []):
+                        img_folder_collision(collisions_img_folders,
+                                             image_counter,
+                                             current_screen)
 
                 # Drag
                 if mode == DRAG:
