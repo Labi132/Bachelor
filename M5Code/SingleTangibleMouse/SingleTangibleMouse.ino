@@ -33,13 +33,18 @@ void setup()
     Serial.println(WiFi.localIP());
     
     
+    
     M5.Lcd.setBrightness(255);
+    M5.Lcd.setTextWrap(true, true);
+    M5.Lcd.setTextSize(3);
+    M5.Lcd.setTextDatum(BC_DATUM);
     M5.Lcd.drawJpgFile(SD, "/drag.jpg", 0, 0, 320, 240);
+    M5.Lcd.drawString("Ziehen", 160, 240, 2);
 }
 
 String mode[5] = {"PAN", "DRAG","HIGHLIGHT", "GROUP",  "ZOOM"};
 int current_mode = 1;
-bool mode_changed = false;
+bool mode_changed = true;
 
 void loop()
 {
@@ -79,15 +84,15 @@ void loop()
         return;
     }
 
-    if (mode_changed == true){
+  if (mode_changed == true){
             switch(current_mode){
-          case 0: M5.Lcd.clear(); M5.Lcd.drawJpgFile(SD, "/pan.jpg", 0, 0, 320, 240); break;
-          case 1: M5.Lcd.clear(); M5.Lcd.drawJpgFile(SD, "/drag.jpg", 0, 0, 320, 240); break;
-          case 2: M5.Lcd.clear(); M5.Lcd.drawJpgFile(SD, "/highlight.jpg", 0, 0, 320, 240); break;
-          case 3: M5.Lcd.clear(); M5.Lcd.drawJpgFile(SD, "/group.jpg", 0, 0, 320, 240); break;
-          case 4: M5.Lcd.clear(); M5.Lcd.drawJpgFile(SD, "/zoom.jpg", 0, 0, 320, 240); break;
+          case 0: M5.Lcd.clear(); M5.Lcd.drawJpgFile(SD, "/pan.jpg", 0, 0, 320, 240); M5.Lcd.drawString("Scrollen", 160, 240, 2); break;
+          case 1: M5.Lcd.clear(); M5.Lcd.drawJpgFile(SD, "/drag.jpg", 0, 0, 320, 240); M5.Lcd.drawString("Ziehen", 160, 240, 2); break;
+          case 2: M5.Lcd.clear(); M5.Lcd.drawJpgFile(SD, "/highlight.jpg", 0, 0, 320, 240); M5.Lcd.drawString("Markieren", 160, 240, 2); break;
+          case 3: M5.Lcd.clear(); M5.Lcd.drawJpgFile(SD, "/group.jpg", 0, 0, 320, 240); M5.Lcd.drawString("Mark. Anziehen", 160, 240, 2); break;
+          case 4: M5.Lcd.clear(); M5.Lcd.drawJpgFile(SD, "/zoom.jpg", 0, 0, 320, 240); M5.Lcd.drawString("Bild Zoomen", 160, 240, 2); break;
           default: break;
-        }  
+        }    
           // We now create a URI for the request
     String url = "/log/";
     url += mode[current_mode];
@@ -97,6 +102,7 @@ void loop()
                  "Host: " + host + "\r\n" +
                  "Connection: close\r\n\r\n");
     mode_changed = false;
-    client.stop();             
+    client.stop();  
+    delay(50);           
     }    
 }
