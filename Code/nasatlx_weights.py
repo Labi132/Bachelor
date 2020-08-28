@@ -45,7 +45,7 @@ class WeightedTLX(QtWidgets.QWizard):
                                  'trial',
                                  'mental_demand_weight',
                                  'physical_demand_weight',
-                                 'temporal_demand_weight'
+                                 'temporal_demand_weight',
                                  'performance_weight',
                                  'effort_weight',
                                  'frustration_weight'])
