@@ -201,7 +201,23 @@ def start_servers(event_source):
     bottle.start()
     # threading.Thread(target=bottle.run).start()
 
-    # Aus Jürgens Code
+    """
+        Copyright Jürgen Hahn
+        Jürgen Hahn, M.Sc.
+        Nachwuchsgruppe / Junior Research Group
+        "Physical-Digital Affordances"
+        Lehrstuhl für Medieninformatik / Media Informatics Group
+        Universität Regensburg
+        Universitätsstr. 31
+        93053 Regensburg
+        Germany
+
+        Tel.: +49941 46297 - 537
+        E-Mail: juergen.hahn@ur.de
+        Web: http://mi.ur.de/sekretariat-team/juergen-hahn/index.html
+        PDA: https://hci.ur.de/people/juergen_hahn
+        Twitter: https://twitter.com/JuergenHahn1
+    """
     mp = MessageParser(event_source)
 
     dispatch = dispatcher.Dispatcher()
@@ -221,7 +237,7 @@ def start_servers(event_source):
     server_.start()
 
     return server
-    # ENDE KOPIERTER CODE HIER
+    # ENDE Copyright
 
 
 def  img_folder_collision(collisions_img_folders, image_counter, current_screen):
