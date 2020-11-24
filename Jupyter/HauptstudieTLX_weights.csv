@@ -1,0 +1,33 @@
+participant_id,trial,mental_demand_weight,physical_demand_weight,temporal_demand_weight,performance_weight,effort_weight,frustration_weight
+S1, SSt, 4, 0, 4, 5, 2, 0
+S2, SSt, 1, 3, 3, 5, 2, 1
+S3, SSt, 5, 1, 1, 5, 3, 0
+S4, SSt, 4, 4, 0, 1, 2, 4
+S5, SSt, 2, 3, 3, 2, 1, 4
+S6, SSt, 2, 2, 4, 5, 2, 0
+S7, SSt, 1, 2, 3, 5, 4, 0
+
+S1, SM, 4, 1, 3, 3, 4, 0
+S2, SM, 2, 3, 3, 2, 4, 1
+S3, SM, 4, 1, 0, 2, 3, 5
+S4, SM, 3, 2, 1, 4, 2, 3
+S5, SM, 2, 4, 0, 2, 5, 2
+S6, SM, 1, 1, 3, 3, 2, 5
+S7, SM, 2, 1, 5, 4, 2, 1
+
+S1, MM, 4, 1, 3, 5, 2, 0
+S2, MM, 3, 2, 2, 2, 3, 3
+S3, MM, 5, 0, 1, 3, 3, 3
+S4, MM, 5, 1, 1, 3, 2, 3
+S5, MM, 2, 4, 1, 2, 4, 2
+S6, MM, 1, 3, 4, 5, 2, 0
+S7, MM, 2, 1, 5, 4, 3, 0
+
+S1, MSt, 4, 2, 3, 3, 2, 0
+S2, MSt, 1, 4, 3, 4, 3, 0
+S3, MSt, 5, 1, 1, 5, 3, 0
+S4, MSt, 5, 1, 1, 3, 1, 4
+S5, MSt, 2, 1, 5, 3, 2, 2
+S6, MSt, 4, 1, 3, 5, 2, 0
+S7, MSt, 2, 4, 1, 5, 3, 0
+

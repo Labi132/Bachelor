@@ -1,0 +1,8 @@
+ID,Alter,Geschlecht,Beruf
+S1,51,w,Steuerfachangestellte
+S2,34,m,Umschüler
+S3,23,w,Student:MI
+S4,22,m,Student: MI
+S5,22,m,Student:MI
+S6,47,w,Ausb.: Industriekauffrau
+S7,21,w,Student: MI
