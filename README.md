@@ -13,17 +13,16 @@ Start:  Tangibles mit den entsprechenden Softwares bespielen, Marker aufkleben, 
 
 
 Die Inhalte der Ordner code/datastructures; code/lib; code/parsers sowie die Datei nasatlx.py fallen unter folgendes Copyright:
-    Copyright Jürgen Hahn
-    Jürgen Hahn, M.Sc.
-    Nachwuchsgruppe / Junior Research Group
-    "Physical-Digital Affordances"
-    Lehrstuhl für Medieninformatik / Media Informatics Group
-    Universität Regensburg
-    Universitätsstr. 31
-    93053 Regensburg
-    Germany
-    Tel.: +49941 46297 - 537
-    E-Mail: juergen.hahn@ur.de
-    Web: http://mi.ur.de/sekretariat-team/juergen-hahn/index.html
-    PDA: https://hci.ur.de/people/juergen_hahn
-    Twitter: https://twitter.com/JuergenHahn1
+    Copyright Jürgen Hahn<br/>
+    Jürgen Hahn, M.Sc.<br/>
+    Nachwuchsgruppe / Junior Research Group "Physical-Digital Affordances"<br/>
+    Lehrstuhl für Medieninformatik / Media Informatics Group<br/>
+    Universität Regensburg<br/>
+    Universitätsstr. 31<br/>
+    93053 Regensburg<br/>
+    Germany<br/>
+    Tel.: +49941 46297 - 537<br/>
+    E-Mail: juergen.hahn@ur.de<br/>
+    Web: http://mi.ur.de/sekretariat-team/juergen-hahn/index.html<br/>
+    PDA: https://hci.ur.de/people/juergen_hahn<br/>
+    Twitter: https://twitter.com/JuergenHahn1<br/>
